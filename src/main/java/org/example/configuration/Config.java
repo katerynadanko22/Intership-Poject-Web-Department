@@ -27,7 +27,7 @@ public class Config {
         internalResourceViewResolver.setSuffix(".jsp");
         return internalResourceViewResolver;
     }
-//
+
     @Bean
     public DataSource dataSource() {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
