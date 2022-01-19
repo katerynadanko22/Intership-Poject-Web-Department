@@ -18,4 +18,59 @@ public class ProjectPosition {
     private String positionStartDate;
     @Column(name = "position_end_date")
     private String positionEndDate;
+
+    public ProjectPosition(Long id) {
+        this.id = id;
+    }
+
+    public ProjectPosition() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPositionTitle() {
+        return positionTitle;
+    }
+
+    public void setPositionTitle(String positionTitle) {
+        this.positionTitle = positionTitle;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getPositionStartDate() {
+        return positionStartDate;
+    }
+
+    public void setPositionStartDate(String positionStartDate) {
+        this.positionStartDate = positionStartDate;
+    }
+
+    public String getPositionEndDate() {
+        return positionEndDate;
+    }
+
+    public void setPositionEndDate(String positionEndDate) {
+        this.positionEndDate = positionEndDate;
+    }
 }

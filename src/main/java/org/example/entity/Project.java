@@ -18,4 +18,51 @@ public class Project {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     private Set<ProjectPosition> projectPositions;
+
+    public Project(Long id) {
+        this.id = id;
+    }
+
+    public Project() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public Set<ProjectPosition> getProjectPositions() {
+        return projectPositions;
+    }
+
+    public void setProjectPositions(Set<ProjectPosition> projectPositions) {
+        this.projectPositions = projectPositions;
+    }
 }
