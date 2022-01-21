@@ -7,11 +7,11 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@ComponentScan(value={"org.example"})
+@ComponentScan(value = {"org.example"})
 @EnableWebMvc
 public class AppConfiguration {
     @Bean
-    public  static PropertySourcesPlaceholderConfigurer cong(){
+    public static PropertySourcesPlaceholderConfigurer cong() {
         return new PropertySourcesPlaceholderConfigurer();
     }
 }
