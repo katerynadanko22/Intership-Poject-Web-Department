@@ -9,9 +9,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
@@ -20,19 +26,30 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @PropertySource(value = {"classpath:application.properties"})
-@ComponentScan(value={"org.example"})
+@ComponentScan(value = {"org.example"})
 public class HibernateConfig {
 
     @Autowired
     private Environment env;
 
+    public static final String ENTITY_BASE_PACKAGE = "org.example.entity";
+    public static final String DATASOURCE_DRIVER = "datasource.driver";
+    public static final String DATASOURCE_URL = "datasource.url";
+    public static final String DATASOURCE_USERNAME = "datasource.username";
+    public static final String DATASOURCE_PASSWORD = "datasource.password";
+    public static final String HIBERNATE_DIALECT = "hibernate.dialect";
+    public static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
+    public static final String HIBERNATE_BATCH_SIZE = "hibernate.batch.size";
+    public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
+    public static final String HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS = "hibernate.current.session.context.class";
+
     @Bean
     public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getRequiredProperty("datasource.driver"));
-        dataSource.setUrl(env.getRequiredProperty("datasource.url"));
-        dataSource.setUsername(env.getRequiredProperty("datasource.username"));
-        dataSource.setPassword(env.getRequiredProperty("datasource.password"));
+        dataSource.setDriverClassName(env.getRequiredProperty(DATASOURCE_DRIVER));
+        dataSource.setUrl(env.getRequiredProperty(DATASOURCE_URL));
+        dataSource.setUsername(env.getRequiredProperty(DATASOURCE_USERNAME));
+        dataSource.setPassword(env.getRequiredProperty(DATASOURCE_PASSWORD));
         return dataSource;
     }
 
@@ -40,24 +57,48 @@ public class HibernateConfig {
     public LocalSessionFactoryBean getSessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(getDataSource());
-        sessionFactory.setPackagesToScan("com.bytestree.model");
+        sessionFactory.setPackagesToScan(ENTITY_BASE_PACKAGE);
         sessionFactory.setHibernateProperties(getHibernateProperties());
         return sessionFactory;
     }
 
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
-        properties.put(AvailableSettings.DIALECT, env.getRequiredProperty("hibernate.dialect"));
-        properties.put(AvailableSettings.SHOW_SQL, env.getRequiredProperty("hibernate.show_sql"));
-        properties.put(AvailableSettings.STATEMENT_BATCH_SIZE, env.getRequiredProperty("hibernate.batch.size"));
-        properties.put(AvailableSettings.HBM2DDL_AUTO, env.getRequiredProperty("hibernate.hbm2ddl.auto"));
-        properties.put(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS, env.getRequiredProperty("hibernate.current.session.context.class"));
+        properties.put(AvailableSettings.DIALECT, env.getRequiredProperty(HIBERNATE_DIALECT));
+        properties.put(AvailableSettings.SHOW_SQL, env.getRequiredProperty(HIBERNATE_SHOW_SQL));
+        properties.put(AvailableSettings.STATEMENT_BATCH_SIZE, env.getRequiredProperty(HIBERNATE_BATCH_SIZE));
+        properties.put(AvailableSettings.HBM2DDL_AUTO, env.getRequiredProperty(HIBERNATE_HBM2DDL_AUTO));
+        properties.put(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS, env.getRequiredProperty(HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS));
         return properties;
     }
+
     @Bean
     public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
         HibernateTransactionManager txManager = new HibernateTransactionManager();
         txManager.setSessionFactory(sessionFactory);
         return txManager;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        return transactionManager;
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(getDataSource());
+        em.setPackagesToScan(ENTITY_BASE_PACKAGE);
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(getHibernateProperties());
+        return em;
+    }
+
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
     }
 }
