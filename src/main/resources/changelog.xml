@@ -51,11 +51,11 @@
             <column name="password" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="job_title" type="varchar">
+            <column name="job_title" type="varchar" >
                 <constraints nullable="false"/>
             </column>
             <column name="department" type="int">
-                <constraints nullable="false" foreignKeyName="fk_user_department" references="departments(id)"/>
+                <constraints foreignKeyName="fk_user_department" references="departments(id)"/>
             </column>
 
         </createTable>
@@ -66,6 +66,9 @@
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="position_title" type="varchar">
+                <constraints nullable="false"/>
+            </column>
             <column name="position_start_date" type="date">
                 <constraints nullable="false"/>
             </column>
@@ -73,10 +76,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="int">
-                <constraints nullable="false" foreignKeyName="fk_project_position_user" references="users(id)"/>
+                <constraints foreignKeyName="fk_project_position_user" references="users(id)"/>
             </column>
             <column name="project_id" type="int">
-                <constraints nullable="false" foreignKeyName="fk_project_position_project" references="projects(id)"/>
+                <constraints foreignKeyName="fk_project_position_project" references="projects(id)"/>
             </column>
 
         </createTable>

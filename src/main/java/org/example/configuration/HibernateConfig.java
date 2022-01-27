@@ -1,6 +1,7 @@
 package org.example.configuration;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -29,8 +31,12 @@ import java.util.Properties;
 @ComponentScan(value = {"org.example"})
 public class HibernateConfig {
 
+//    private static final Logger log = LoggerFactory.getLogger(HibernateConfig.class);
     @Autowired
-    private Environment env;
+    public HibernateConfig(Environment env) {
+        this.env = env;
+    }
+    private final Environment env;
 
     public static final String ENTITY_BASE_PACKAGE = "org.example.entity";
     public static final String DATASOURCE_DRIVER = "datasource.driver";
@@ -43,8 +49,11 @@ public class HibernateConfig {
     public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
     public static final String HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS = "hibernate.current.session.context.class";
 
+
+
     @Bean
     public DataSource getDataSource() {
+//        log.info("Loading DataSource");
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getRequiredProperty(DATASOURCE_DRIVER));
         dataSource.setUrl(env.getRequiredProperty(DATASOURCE_URL));
@@ -72,7 +81,7 @@ public class HibernateConfig {
         return properties;
     }
 
-    @Bean
+    @Bean(name = "transactionManager")
     public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
         HibernateTransactionManager txManager = new HibernateTransactionManager();
         txManager.setSessionFactory(sessionFactory);
@@ -101,4 +110,5 @@ public class HibernateConfig {
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
+
 }

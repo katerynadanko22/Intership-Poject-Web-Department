@@ -24,4 +24,11 @@ public class Department {
     @Column(name = "title")
     private String title;
 
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

@@ -6,22 +6,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement
 @PropertySource(value = {"classpath:application.properties"})
 @ComponentScan(value = {"org.example"})
 public class LiquiBaseConfig {
 
+    private final HibernateConfig hibernateConfig;
+
     @Autowired
-    HibernateConfig hibernateConfig;
-    public static final String CLASSPATH_CHANGELOG = "classpath:changelog.xml";
+    public LiquiBaseConfig(HibernateConfig hibernateConfig) {
+        this.hibernateConfig = hibernateConfig;
+    }
 
     @Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setChangeLog(CLASSPATH_CHANGELOG);
+        liquibase.setChangeLog("classpath:changelog.xml");
         liquibase.setDataSource(hibernateConfig.getDataSource());
         return liquibase;
     }
