@@ -1,9 +1,14 @@
 package org.example.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.ProjectPosition;
+import org.example.dto.ProjectPositionDTO;
 import org.example.exception.ResourceNotFoundException;
-import org.example.service.ProjectPositionService;
+import org.example.facade.ProjectFacade;
+import org.example.facade.ProjectPositionFacade;
+import org.example.facade.UserFacade;
+import org.example.modelmapper.ProjectMapper;
+import org.example.modelmapper.ProjectPositionMapper;
+import org.example.modelmapper.UserMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,72 +27,64 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/project_positions")
 public class ProjectPositionController {
-    private final ProjectPositionService projectPositionService;
+    private final ProjectPositionFacade projectPositionFacade;
+    private final UserFacade userFacade;
+    private final ProjectFacade projectFacade;
+    private final ProjectPositionMapper projectPositionMapper;
+    private final UserMapper userMapper;
+    private final ProjectMapper projectMapper;
 
-    public ProjectPositionController(ProjectPositionService projectPositionService) {
-        this.projectPositionService = projectPositionService;
+    public ProjectPositionController(ProjectPositionFacade projectPositionFacade,
+                                     UserFacade userFacade, ProjectFacade projectFacade,
+                                     ProjectPositionMapper projectPositionMapper,
+                                     UserMapper userMapper, ProjectMapper projectMapper) {
+        this.projectPositionFacade = projectPositionFacade;
+        this.userFacade = userFacade;
+        this.projectFacade = projectFacade;
+        this.projectPositionMapper = projectPositionMapper;
+        this.userMapper = userMapper;
+        this.projectMapper = projectMapper;
     }
 
     @PostMapping(value = "/save/{userId}/{projectId}")
-    private ResponseEntity <String> saveProjectPosition(@RequestBody ProjectPosition projectPosition,
-                                          @PathVariable("userId") Integer userId,
-                                          @PathVariable("projectId") Integer projectId) {
-        ProjectPosition savedProjectPosition = projectPositionService.save(projectPosition, userId, projectId);
+    private ResponseEntity<String> saveProjectPosition(@RequestBody ProjectPositionDTO projectPosition,
+                                                       @PathVariable("userId") Integer userId,
+                                                       @PathVariable("projectId") Integer projectId) {
+        projectPosition.setUserDTO(userFacade.findById(userId));
+        projectPosition.setProjectDTO(projectFacade.findById(projectId));
+        ProjectPositionDTO savedProjectPosition = projectPositionFacade.save(projectPosition);
         return ResponseEntity.ok("ProjectPosition saved successfully: " + savedProjectPosition);
     }
 
     @GetMapping("/get/{id}")
-    ResponseEntity <String>getProjectPositionById(@PathVariable("id") Integer id) {
-        ProjectPosition projectPosition = projectPositionService.getById(id);
+    ResponseEntity<String> getProjectPositionById(@PathVariable("id") Integer id) {
+        ProjectPositionDTO projectPosition = projectPositionFacade.getById(id);
         return ResponseEntity.ok("ProjectPosition: " + projectPosition);
     }
 
     @GetMapping("/find/{id}")
-    ResponseEntity <String>findProjectPositionById(@PathVariable("id") Integer id) {
-        Optional<ProjectPosition> projectPosition = projectPositionService.findById(id);
+    ResponseEntity<String> findProjectPositionById(@PathVariable("id") Integer id) {
+        Optional<ProjectPositionDTO> projectPosition = projectPositionFacade.findById(id);
         return ResponseEntity.ok("ProjectPosition: " + projectPosition.get());
     }
 
     @GetMapping(value = "/")
     private ResponseEntity<String> showAllProjectPositions() {
-        List<ProjectPosition> projectPositions = projectPositionService.findAll();
+        List<ProjectPositionDTO> projectPositions = projectPositionFacade.findAll();
         return ResponseEntity.ok("ProjectPositions: " + projectPositions);
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<String> updateProjectPositionById(@RequestBody ProjectPosition projectPositionNew)
+    private ResponseEntity updatePutProjectPositionDTOById(@PathVariable("id") Integer id,
+                                                           @RequestBody ProjectPositionDTO dto)
             throws ResourceNotFoundException {
-        ProjectPosition projectPosition = projectPositionService.findById(projectPositionNew.getId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("ProjectPosition not found for id: " + projectPositionNew.getId()));
-        projectPosition.setPositionTitle(projectPosition.getPositionTitle());
-        projectPosition.setUser(projectPosition.getUser());
-        projectPosition.setProject(projectPosition.getProject());
-        projectPosition.setPositionStartDate(projectPosition.getPositionStartDate());
-        projectPosition.setPositionEndDate(projectPosition.getPositionEndDate());
-
-        final ProjectPosition updatedProjectPosition = projectPositionService.save(projectPosition);
-        return ResponseEntity.ok("ProjectPosition " + updatedProjectPosition + " updated successfully");
-    }
-
-    @PostMapping("/")
-    private ResponseEntity<String> updateProjectPosition(@RequestBody ProjectPosition projectPositionNew)
-            throws ResourceNotFoundException {
-        ProjectPosition projectPosition = projectPositionService.findById(projectPositionNew.getId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("ProjectPosition not found for id: " + projectPositionNew.getId()));
-        projectPosition.setProject(projectPositionNew.getProject());
-        final ProjectPosition updatedProjectPosition = projectPositionService.update(projectPositionNew);
-        return ResponseEntity.ok("ProjectPosition " + updatedProjectPosition + " updated successfully");
+        ProjectPositionDTO updated = projectPositionFacade.update(id, dto);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     private ResponseEntity deleteProjectPositionById(@PathVariable("id") Integer id) {
-        try {
-            projectPositionService.deleteById(id);
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        }
+        projectPositionFacade.deleteById(id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }

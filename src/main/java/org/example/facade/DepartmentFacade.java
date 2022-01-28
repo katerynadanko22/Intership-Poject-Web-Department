@@ -1,64 +1,57 @@
 package org.example.facade;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.converter.DepartmentConverter;
-//import org.example.mapper.DepartmentDtoMapper;
 import org.example.dto.DepartmentDTO;
+import org.example.dto.ProjectDTO;
 import org.example.entity.Department;
-import org.example.exception.ValidationException;
+import org.example.entity.Project;
+import org.example.modelmapper.DepartmentMapper;
 import org.example.service.DepartmentService;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class DepartmentFacade {
 
-//    private DepartmentDtoMapper mapper
-//            = Mappers.getMapper(DepartmentDtoMapper.class);
-
     private final DepartmentService departmentService;
-    private final DepartmentConverter departmentConverter;
+    private final DepartmentMapper mapper;
 
-    public DepartmentFacade(DepartmentService departmentService, DepartmentConverter departmentConverter) {
+    public DepartmentFacade(DepartmentService departmentService, DepartmentMapper mapper) {
         this.departmentService = departmentService;
-        this.departmentConverter = departmentConverter;
+        this.mapper = mapper;
     }
 
-    public DepartmentDTO save(DepartmentDTO departmentDTO) throws ValidationException {
-        Department savedDep = departmentService.save(departmentConverter.fromDepartmentDTOToDepartment(departmentDTO));
-        return departmentConverter.fromDepartmentToDepartmentDto(savedDep);
+    public DepartmentDTO save(DepartmentDTO departmentDTO) {
+        Department entity = mapper.toEntity(departmentDTO);
+        Department saved = departmentService.save(entity);
+        return mapper.toDto(saved);
     }
-
 
     public List<DepartmentDTO> findAll() {
         List<Department> departments = departmentService.findAll();
         return departments
                 .stream()
-                .map(departmentConverter::fromDepartmentToDepartmentDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public Optional<DepartmentDTO> findById(Integer id) {
-        return Optional.ofNullable(departmentConverter.
-                fromDepartmentToDepartmentDto(departmentService.findById(id).get()));
+    public DepartmentDTO findById(Integer id) {
+        return mapper.toDto(departmentService.findById(id).get());
     }
 
     public DepartmentDTO getById(Integer id) {
-        return departmentConverter.fromDepartmentToDepartmentDto(departmentService.getById(id));
+        return mapper.toDto(departmentService.getById(id));
     }
 
-//    public DepartmentDTO update(DepartmentDTO departmentDTONew) {
-//        Department department = departmentService.findById(departmentDTONew.getId());
-//        department.setTitle(departmentDTONew.getTitle());
-//        return departmentConverter.fromDepartmentToDepartmentDto(departmentService.save(department));
-//    }
+    public DepartmentDTO update(Integer id, DepartmentDTO departmentDTONew) {
+        Department update = departmentService.update(id, mapper.toEntity(departmentDTONew));
+        return mapper.toDto(update);
+    }
 
     public void deleteById(Integer id) {
-            departmentService.deleteById(id);
+        departmentService.deleteById(id);
     }
 }

@@ -34,7 +34,7 @@ public class User {
     @Column(name = "job_title")
     private String jobTitle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department")
     private Department department;
 

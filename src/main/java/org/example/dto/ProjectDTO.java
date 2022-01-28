@@ -16,6 +16,8 @@ import java.time.LocalDate;
 public class ProjectDTO {
     private Integer id;
     private String title;
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     private LocalDate startDate;
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     private LocalDate endDate;
 }

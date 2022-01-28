@@ -1,8 +1,11 @@
 package org.example.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.UserDTO;
+import org.example.entity.ProjectPosition;
 import org.example.entity.User;
 import org.example.exception.DuplicateUserException;
+import org.example.modelmapper.UserMapper;
 import org.example.repository.DepartmentRepository;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
@@ -20,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final DepartmentRepository departmentRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, DepartmentRepository departmentRepository) {
+    public UserServiceImpl(UserRepository userRepository, DepartmentRepository departmentRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
     }
@@ -32,21 +35,21 @@ public class UserServiceImpl implements UserService {
         if (departmentId == null) {
             throw new RuntimeException("Required parameters: departmentId");
         }
-        for (User u : userRepository.findAll()) {
-            if (u.getEmail().equals(user.getEmail())) {
-                throw new DuplicateUserException(user);
-            }
-        }
+//        for (User u : userRepository.findAll()) {
+//            if (u.getEmail().equals(user.getEmail())) {
+//                throw new DuplicateUserException(user);
+//            }
+//        }
 //        if (departmentRepository.findById(departmentId).isPresent())
-            user.setDepartment(departmentRepository.getById(departmentId));
+        user.setDepartment(departmentRepository.getById(departmentId));
         return userRepository.save(user);
     }
+
     @Override
     public User save(User user) {
         log.info(String.format("user.save {id = %d}", user.getId()));
         return userRepository.save(user);
     }
-
 
     @Override
     public List<User> findAll() {
@@ -66,8 +69,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User updatedUser) {
-        User user = userRepository.getById(updatedUser.getId());
+    public User update(Integer id, User updatedUser) {
+        User user = userRepository.getById(id);
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
         user.setJobTitle(updatedUser.getJobTitle());
@@ -77,13 +80,13 @@ public class UserServiceImpl implements UserService {
             user.setPassword(updatedUser.getPassword());
         }
         user.setPassword(updatedUser.getPassword());
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     public void deleteById(Integer id) {
-        if (userRepository.findById(id).isPresent()) {
-            userRepository.deleteById(id);
-        }
+//        if (userRepository.findById(id).isPresent()) {
+        userRepository.deleteById(id);
+//        }
     }
 }

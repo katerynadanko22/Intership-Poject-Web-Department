@@ -12,7 +12,7 @@ public interface ProjectService {
 
     Optional<Project> findById(Integer id);
 
-    Project update(Project updatedProject);
+    Project update(Integer id, Project updatedProject);
 
     void deleteById(Integer id);
 

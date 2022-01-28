@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProjectPositionService {
-    ProjectPosition save(ProjectPosition projectPosition,
-                         Integer userId, Integer projectId);
 
     ProjectPosition save(ProjectPosition projectPosition);
 
@@ -16,7 +14,7 @@ public interface ProjectPositionService {
 
     Optional<ProjectPosition> findById(Integer id);
 
-    ProjectPosition update(ProjectPosition updatedProjectPosition);
+    ProjectPosition update(Integer id, ProjectPosition updatedProjectPosition);
 
     void deleteById(Integer id);
 

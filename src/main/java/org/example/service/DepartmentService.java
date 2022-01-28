@@ -13,9 +13,10 @@ public interface DepartmentService {
 
     Optional<Department> findById(Integer id);
 
-    Department update(Department departmentNew);
+    Department getById(Integer id);
+
+    Department update(Integer id, Department departmentNew);
 
     void deleteById(Integer id);
 
-    Department getById(Integer id);
 }

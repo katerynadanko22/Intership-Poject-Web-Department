@@ -24,8 +24,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Valid
     @Override
     public Project save(Project project) {
-//        log.info(String.format("project.save {id = %d, title = %s}", project.getId(), project.getTitle()));
-
+        log.info(String.format("project.save {id = %d, title = %s}", project.getId(), project.getTitle()));
         Project savedProject = projectRepository.save(project);
         return savedProject;
     }
@@ -40,26 +39,27 @@ public class ProjectServiceImpl implements ProjectService {
     public Optional<Project> findById(Integer id) {
         return projectRepository.findById(id);
     }
+
     @Override
     public Project getById(Integer id) {
         return projectRepository.getById(id);
     }
 
     @Override
-    public Project update(Project updatedProject) {
-        Project project = projectRepository.getById(updatedProject.getId());
+    public Project update(Integer id, Project updatedProject) {
+        Project project = projectRepository.getById(id);
         project.setTitle(updatedProject.getTitle());
         project.setStartDate(updatedProject.getStartDate());
         project.setEndDate(updatedProject.getEndDate());
 
-        return projectRepository.save(updatedProject);
+        return projectRepository.save(project);
     }
 
     @Override
     public void deleteById(Integer id) {
-        if (projectRepository.findById(id).isPresent()) {
-            projectRepository.deleteById(id);
-        }
+//        if (projectRepository.findById(id).isPresent()) {
+        projectRepository.deleteById(id);
+//        }
     }
 
 }

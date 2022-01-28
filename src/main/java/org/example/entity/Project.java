@@ -29,11 +29,9 @@ public class Project {
     private String title;
 
     @Column(name = "start_date")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     private LocalDate startDate;
 
     @Column(name = "end_date")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     private LocalDate endDate;
 
 }

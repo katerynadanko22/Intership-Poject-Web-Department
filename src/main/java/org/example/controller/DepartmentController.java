@@ -2,11 +2,13 @@ package org.example.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.DepartmentDTO;
+import org.example.dto.ProjectDTO;
 import org.example.exception.ResourceNotFoundException;
 import org.example.entity.Department;
 import org.example.exception.ValidationException;
 import org.example.facade.DepartmentFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -27,6 +28,7 @@ import java.util.Optional;
 public class DepartmentController {
 
     private final DepartmentFacade departmentFacade;
+
     @Autowired
     public DepartmentController(DepartmentFacade departmentFacade) {
         this.departmentFacade = departmentFacade;
@@ -44,10 +46,11 @@ public class DepartmentController {
         DepartmentDTO departmentDTO = departmentFacade.getById(id);
         return ResponseEntity.ok("Department: " + departmentDTO);
     }
+
     @GetMapping("/find/{id}")
     private ResponseEntity<String> findDepartmentDTOById(@PathVariable("id") Integer id) {
-        Optional<DepartmentDTO> departmentDTO = departmentFacade.findById(id);
-        return ResponseEntity.ok("Department: " + departmentDTO.get());
+        DepartmentDTO departmentDTO = departmentFacade.findById(id);
+        return ResponseEntity.ok("Department: " + departmentDTO);
     }
 
     @GetMapping(value = "/")
@@ -56,32 +59,17 @@ public class DepartmentController {
         return ResponseEntity.ok("Departments: " + allDepartmentsDTO);
     }
 
-//    @PutMapping("/{id}")
-//    private ResponseEntity<String> updateDepartmentDTOById(@PathVariable("id") Integer id,
-//                                                        @RequestBody DepartmentDTO departmentDTODetails)
-//            throws ResourceNotFoundException, ValidationException {
-//        DepartmentDTO departmentDTO = departmentFacade.findById(id).get();
-//        departmentDTO.setTitle(departmentDTODetails.getTitle());
-//        final DepartmentDTO updatedDepartmentDTO = departmentFacade.save(departmentDTO);
-//        return ResponseEntity.ok("Department " + updatedDepartmentDTO + " updated successfully");
-//    }
-
-//    @PostMapping("/")
-//    private ResponseEntity<String> updateDepartmentDTO(@RequestBody DepartmentDTO departmentDTONew)
-//            throws ResourceNotFoundException {
-//        DepartmentDTO departmentDTO = departmentFacade.findById(departmentDTONew.getId()).get();
-//        departmentDTO.setTitle(departmentDTONew.getTitle());
-//        final DepartmentDTO updatedDepartmentDTO = departmentFacade.update(departmentDTONew);
-//        return ResponseEntity.ok("Department " + updatedDepartmentDTO + " updated successfully");
-//    }
+    @PutMapping("/{id}")
+    private ResponseEntity<String> updateDepartmentDTOById(@PathVariable("id") Integer id,
+                                                           @RequestBody DepartmentDTO departmentDTODetails)
+            throws ResourceNotFoundException {
+        DepartmentDTO updatedDepartmentDTO = departmentFacade.update(id, departmentDTODetails);
+        return ResponseEntity.ok("Department " + updatedDepartmentDTO + " updated successfully");
+    }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<String> deleteDepartmentDTOById(@PathVariable("id") Integer id) {
-        try {
-            departmentFacade.deleteById(id);
-            return ResponseEntity.ok("Department " + departmentFacade.findById(id).get() + "deleted");
-        } catch (Exception e) {
-            return ResponseEntity.ok("BAD_REQUEST");
-        }
+    private ResponseEntity deleteDepartmentDTOById(@PathVariable("id") Integer id) {
+        departmentFacade.deleteById(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

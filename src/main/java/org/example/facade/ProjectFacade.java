@@ -1,29 +1,31 @@
 package org.example.facade;
 
-import org.example.converter.ProjectConverter;
 import org.example.dto.ProjectDTO;
 import org.example.entity.Project;
+import org.example.modelmapper.ProjectMapper;
 import org.example.service.ProjectService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ProjectFacade {
     private final ProjectService projectService;
-    private final ProjectConverter projectConverter;
+    private final ProjectMapper mapper;
 
-    public ProjectFacade(ProjectService projectService, ProjectConverter projectConverter) {
+    public ProjectFacade(ProjectService projectService, ProjectMapper mapper) {
         this.projectService = projectService;
-        this.projectConverter = projectConverter;
+
+        this.mapper = mapper;
     }
 
     public ProjectDTO save(ProjectDTO projectDTO) {
         Project savedProject = projectService
-                .save(projectConverter.fromProjectDTOToProject(projectDTO));
-        ProjectDTO savedProjectDTO = projectConverter.fromProjectToProjectDto(savedProject);
+                .save(mapper.toEntity(projectDTO));
+        ProjectDTO savedProjectDTO = mapper.toDto(savedProject);
         return savedProjectDTO;
     }
 
@@ -31,28 +33,27 @@ public class ProjectFacade {
         List<Project> projects = projectService.findAll();
         return projects
                 .stream()
-                .map(projectConverter::fromProjectToProjectDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public Optional<ProjectDTO> findById(Integer id) {
-        return Optional.ofNullable(projectConverter
-                .fromProjectToProjectDto(projectService.findById(id).get()));
+    public ProjectDTO findById(Integer id) {
+        return mapper.toDto(projectService.findById(id).get());
     }
 
     public ProjectDTO getById(Integer id) {
-        return projectConverter.fromProjectToProjectDto(projectService.getById(id));
+        return mapper.toDto(projectService.getById(id));
     }
 
-    public ProjectDTO update(ProjectDTO projectDTONew) {
-        Project project = projectService.findById(projectDTONew.getId()).get();
-        project.setTitle(projectDTONew.getTitle());
-        return projectConverter.fromProjectToProjectDto(projectService.save(project));
+    public ProjectDTO update(Integer id, ProjectDTO projectDTONew) {
+        Project update = projectService.update(id, mapper.toEntity(projectDTONew));
+        return mapper.toDto(update);
     }
 
     public void deleteById(Integer id) {
-//        if (departmentService.findById(id).isPresent()) {
-        projectService.deleteById(id);
-//        }
+        if (projectService.findById(id).isPresent()) {
+            projectService.deleteById(id);
+        }
     }
 }
+

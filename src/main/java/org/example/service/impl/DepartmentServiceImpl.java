@@ -23,7 +23,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Department save(Department department) {
         log.info(String.format("department.save {id = %d, title = %s}", department.getId(),
                 department.getTitle()));
-//        departmentRepository.findById(department.getId());
         return departmentRepository.save(department);
     }
 
@@ -44,16 +43,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Department update(Department departmentNew) {
-        Department department = departmentRepository.findById(departmentNew.getId()).get();
+    public Department update(Integer id, Department departmentNew) {
+        Department department = departmentRepository.findById(id).get();
         department.setTitle(departmentNew.getTitle());
         return departmentRepository.save(department);
     }
 
     @Override
     public void deleteById(Integer id) {
-        if (departmentRepository.findById(id).isPresent()) {
-            departmentRepository.deleteById(id);
-        }
+//        if (departmentRepository.findById(id).isPresent()) {
+        departmentRepository.deleteById(id);
+//        }
     }
 }
