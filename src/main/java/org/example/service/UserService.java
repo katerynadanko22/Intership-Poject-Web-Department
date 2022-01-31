@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    User save(User user, Integer departmentId);
 
     User save(User user);
 

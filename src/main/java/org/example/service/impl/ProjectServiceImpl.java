@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -37,16 +38,25 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Optional<Project> findById(Integer id) {
+        if (!projectRepository.findById(id).isPresent()) {
+            throw new NoSuchElementException();
+        }
         return projectRepository.findById(id);
     }
 
     @Override
     public Project getById(Integer id) {
+        if (!projectRepository.findById(id).isPresent()) {
+            throw new NoSuchElementException();
+        }
         return projectRepository.getById(id);
     }
 
     @Override
     public Project update(Integer id, Project updatedProject) {
+        if (!projectRepository.findById(id).isPresent()) {
+            throw new NoSuchElementException();
+        }
         Project project = projectRepository.findById(id).get();
         project.setTitle(updatedProject.getTitle());
         project.setStartDate(updatedProject.getStartDate());
@@ -57,9 +67,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteById(Integer id) {
-//        if (projectRepository.findById(id).isPresent()) {
+        if (projectRepository.findById(id).isPresent()) {
         projectRepository.deleteById(id);
-//        }
+        }
     }
 
 }

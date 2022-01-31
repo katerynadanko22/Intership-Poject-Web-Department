@@ -50,6 +50,12 @@ public class ProjectPositionController {
     private ResponseEntity<String> saveProjectPosition(@RequestBody ProjectPositionDTO projectPosition,
                                                        @PathVariable("userId") Integer userId,
                                                        @PathVariable("projectId") Integer projectId) {
+        if (projectFacade.findById(projectId)==null) {
+            throw new ResourceNotFoundException("There is no such project in DB");
+        }
+        if (userFacade.findById(userId)==null) {
+            throw new ResourceNotFoundException("There is no such user in DB");
+        }
         projectPosition.setUserDTO(userFacade.findById(userId));
         projectPosition.setProjectDTO(projectFacade.findById(projectId));
         ProjectPositionDTO savedProjectPosition = projectPositionFacade.save(projectPosition);

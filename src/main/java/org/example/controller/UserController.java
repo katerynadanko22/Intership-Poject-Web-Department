@@ -35,6 +35,9 @@ public class UserController {
     @PostMapping(value = "/save/{departmentId}")
     private ResponseEntity<String> saveDepartment(@RequestBody UserDTO user,
                                                   @PathVariable("departmentId") Integer departmentId) throws ValidationException {
+        if (departmentFacade.findById(departmentId)==null) {
+            throw new ResourceNotFoundException("No such department in DB");
+        }
         user.setDepartmentDTO(departmentFacade.findById(departmentId));
         UserDTO savedUser = userFacade.save(user);
         return ResponseEntity.ok("User: " + savedUser + " saved successfully");

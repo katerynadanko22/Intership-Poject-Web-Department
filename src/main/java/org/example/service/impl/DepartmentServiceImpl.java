@@ -8,6 +8,7 @@ import org.example.service.DepartmentService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -34,16 +35,25 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Optional<Department> findById(Integer id) {
+        if (!departmentRepository.findById(id).isPresent()) {
+            throw new NoSuchElementException();
+        }
         return departmentRepository.findById(id);
     }
 
     @Override
     public Department getById(Integer id) {
+        if (!departmentRepository.findById(id).isPresent()) {
+            throw new NoSuchElementException();
+        }
         return departmentRepository.getById(id);
     }
 
     @Override
     public Department update(Integer id, Department departmentNew) {
+        if (!departmentRepository.findById(id).isPresent()) {
+            throw new NoSuchElementException();
+        }
         Department department = departmentRepository.findById(id).get();
         department.setTitle(departmentNew.getTitle());
         return departmentRepository.save(department);
@@ -51,8 +61,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void deleteById(Integer id) {
-//        if (departmentRepository.findById(id).isPresent()) {
+        if (departmentRepository.findById(id).isPresent()) {
         departmentRepository.deleteById(id);
-//        }
+        }
     }
 }

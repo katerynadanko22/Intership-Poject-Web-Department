@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -37,6 +38,9 @@ public class ProjectPositionServiceImpl implements ProjectPositionService {
 
     @Override
     public ProjectPosition getById(Integer id) {
+        if (!projectPositionRepository.findById(id).isPresent()) {
+            throw new NoSuchElementException();
+        }
         return projectPositionRepository.getById(id);
     }
 
@@ -48,11 +52,17 @@ public class ProjectPositionServiceImpl implements ProjectPositionService {
 
     @Override
     public Optional<ProjectPosition> findById(Integer id) {
+        if (!projectPositionRepository.findById(id).isPresent()) {
+            throw new NoSuchElementException();
+        }
         return projectPositionRepository.findById(id);
     }
 
     @Override
     public ProjectPosition update(Integer id, ProjectPosition updatedProjectPosition) {
+        if (!projectPositionRepository.findById(id).isPresent()) {
+            throw new NoSuchElementException();
+        }
         ProjectPosition projectPosition = projectPositionRepository.findById(id).get();
         projectPosition.setProject(updatedProjectPosition.getProject());
         projectPosition.setUser(updatedProjectPosition.getUser());
@@ -65,8 +75,8 @@ public class ProjectPositionServiceImpl implements ProjectPositionService {
 
     @Override
     public void deleteById(Integer id) {
-//        if (projectPositionRepository.findById(id).isPresent()) {
+        if (projectPositionRepository.findById(id).isPresent()) {
         projectPositionRepository.deleteById(id);
-//        }
+        }
     }
 }
