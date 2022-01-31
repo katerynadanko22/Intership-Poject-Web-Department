@@ -64,24 +64,24 @@ public class UserServiceTest {
         verify(userRepositoryMock).save(user);
     }
 
-    @Test
-    public void whenGivenId_shouldDeleteUser_ifFound(){
-        User user = new User();
-        user.setLastName("Testname");
-        user.setId(1);
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        userServiceMock.deleteById(user.getId());
-        verify(userRepositoryMock).deleteById(user.getId());
-    }
-
-    @Test
-    public void should_throw_exception_when_user_do_exist() {
-        User user = new User();
-        user.setId(89);
-        user.setLastName("Testname");
-        given(userRepositoryMock.findById(89)).willReturn(Optional.ofNullable(null));
-        userServiceMock.deleteById(user.getId());
-    }
+//    @Test
+//    public void whenGivenId_shouldDeleteUser_ifFound(){
+//        User user = new User();
+//        user.setLastName("Testname");
+//        user.setId(1);
+//        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+//        userServiceMock.deleteById(user.getId());
+//        verify(userRepositoryMock).deleteById(user.getId());
+//    }
+//
+//    @Test
+//    public void should_throw_exception_when_user_do_exist() {
+//        User user = new User();
+//        user.setId(89);
+//        user.setLastName("Testname");
+//        given(userRepositoryMock.findById(89)).willReturn(Optional.ofNullable(null));
+//        userServiceMock.deleteById(user.getId());
+//    }
 
 //    @Test(expected = RuntimeException.class)
 //    public void should_throw_exception_when_user_doesnt_exist() {

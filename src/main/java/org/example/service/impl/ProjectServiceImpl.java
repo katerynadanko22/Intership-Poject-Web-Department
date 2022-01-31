@@ -47,7 +47,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project update(Integer id, Project updatedProject) {
-        Project project = projectRepository.getById(id);
+        Project project = projectRepository.findById(id).get();
         project.setTitle(updatedProject.getTitle());
         project.setStartDate(updatedProject.getStartDate());
         project.setEndDate(updatedProject.getEndDate());

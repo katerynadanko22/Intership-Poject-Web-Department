@@ -2,16 +2,16 @@ package org.example.facade;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.DepartmentDTO;
-import org.example.dto.ProjectDTO;
 import org.example.entity.Department;
-import org.example.entity.Project;
 import org.example.modelmapper.DepartmentMapper;
 import org.example.service.DepartmentService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Slf4j
 @Service
 public class DepartmentFacade {

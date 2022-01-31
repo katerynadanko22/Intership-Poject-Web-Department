@@ -68,8 +68,8 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity deleteDepartmentDTOById(@PathVariable("id") Integer id) {
+    private ResponseEntity <String> deleteDepartmentDTOById(@PathVariable("id") Integer id) {
         departmentFacade.deleteById(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok("Department: " + id + "deleted");
     }
 }

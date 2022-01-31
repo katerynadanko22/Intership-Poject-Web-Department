@@ -53,7 +53,7 @@ public class ProjectPositionServiceImpl implements ProjectPositionService {
 
     @Override
     public ProjectPosition update(Integer id, ProjectPosition updatedProjectPosition) {
-        ProjectPosition projectPosition = projectPositionRepository.getById(id);
+        ProjectPosition projectPosition = projectPositionRepository.findById(id).get();
         projectPosition.setProject(updatedProjectPosition.getProject());
         projectPosition.setUser(updatedProjectPosition.getUser());
         projectPosition.setPositionTitle(updatedProjectPosition.getPositionTitle());

@@ -63,8 +63,8 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity deleteProjectDTOById(@PathVariable("id") Integer id) {
+    private ResponseEntity <String>deleteProjectDTOById(@PathVariable("id") Integer id) {
         projectFacade.deleteById(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok("Project: " + id + "deleted");
     }
 }

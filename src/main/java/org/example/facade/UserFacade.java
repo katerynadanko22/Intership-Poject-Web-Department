@@ -1,19 +1,19 @@
 package org.example.facade;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.ProjectDTO;
 import org.example.dto.UserDTO;
-import org.example.entity.Project;
 import org.example.entity.User;
 import org.example.modelmapper.UserMapper;
 import org.example.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Slf4j
 @Service
 public class UserFacade {
@@ -30,11 +30,13 @@ public class UserFacade {
         this.mapper = mapper;
     }
 
-    public UserDTO save(UserDTO dto) {
+    public UserDTO save(UserDTO userDTO) {
         log.info(String.format("user.save {id = %d, firstName = %s, lastName = %s}",
-                dto.getId(), dto.getFirstName(), dto.getLastName()));
-        User user = mapper.toEntity(dto);
-        return mapper.toDto(user);
+                userDTO.getId(), userDTO.getFirstName(), userDTO.getLastName()));
+            User savedUser = userService
+                    .save(mapper.toEntity(userDTO));
+            UserDTO savedUserDTO = mapper.toDto(savedUser);
+            return savedUserDTO;
     }
 
     public UserDTO findById(Integer id) {

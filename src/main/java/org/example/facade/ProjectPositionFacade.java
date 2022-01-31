@@ -8,11 +8,13 @@ import org.example.entity.ProjectPosition;;
 import org.example.modelmapper.ProjectPositionMapper;
 import org.example.service.ProjectPositionService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional
 @Slf4j
 @Service
 public class ProjectPositionFacade {
@@ -26,32 +28,14 @@ public class ProjectPositionFacade {
         this.mapper = mapper;
     }
 
-
-    public ProjectPositionDTO save(ProjectPositionDTO dto) {
-//        log.info(String.format("ProjectPosition.save {id = %d, project = %s}",
-//                projectPositionDTO.getId(), projectPositionDTO.getProject()));
-//        ProjectPosition savedProjectPositionDTO = projectPositionService.save
-//                (projectPositionConverter.fromProjectPositionDtoToProjectPosition
-//                        (projectPositionDTO), userId, projectId);
-//        log.info(String.format("ProjectPosition.save {id = %d, project = %s}",
-//                savedProjectPositionDTO.getId(), savedProjectPositionDTO.getProject()));
-
-        ProjectPosition projectPosition = mapper.toEntity(dto);
-        return mapper.toDto(projectPosition);
-
-    }
-
-//    public ProjectPositionDTO save(ProjectPositionDTO projectPositionDTO) {
-//        log.info(String.format("ProjectPosition.save {id = %d, project = %s}",
-//                projectPositionDTO.getId(), projectPositionDTO.getProject()));
-//        ProjectPosition savedProjectPositionDTO = projectPositionService.save
-//                (projectPositionConverter.fromProjectPositionDtoToProjectPosition
-//                        (projectPositionDTO));
-//        log.info(String.format("user.save {id = %d, project = %s}",
-//                savedProjectPositionDTO.getId(), savedProjectPositionDTO.getProject()));
-//        return projectPositionConverter.fromProjectPositionToProjectPositionDto
-//                (savedProjectPositionDTO);
-//    }
+    public ProjectPositionDTO save(ProjectPositionDTO projectPositionDTO) {
+//                    log.info(String.format("ProjectPosition.save {id = %d, project = %s}",
+//                projectPositionDTO.getId(), projectPositionDTO.getProjectDTO()));
+            ProjectPosition savedProjectPosition = projectPositionService
+                    .save(mapper.toEntity(projectPositionDTO));
+            ProjectPositionDTO savedProjectPositionDTO = mapper.toDto(savedProjectPosition);
+            return savedProjectPositionDTO;
+        }
 
     public Optional<ProjectPositionDTO> findById(Integer id) {
         return Optional.ofNullable(mapper.toDto(projectPositionService
@@ -79,7 +63,6 @@ public class ProjectPositionFacade {
 
     public void deleteById(Integer id) {
         projectPositionService.deleteById(id);
-//        }
     }
 }
 

@@ -75,16 +75,16 @@ public class ProjectPositionController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity updatePutProjectPositionDTOById(@PathVariable("id") Integer id,
+    private ResponseEntity<String> updatePutProjectPositionDTOById(@PathVariable("id") Integer id,
                                                            @RequestBody ProjectPositionDTO dto)
             throws ResourceNotFoundException {
         ProjectPositionDTO updated = projectPositionFacade.update(id, dto);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok("ProjectPositions: " + updated);
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity deleteProjectPositionById(@PathVariable("id") Integer id) {
+    private ResponseEntity <String> deleteProjectPositionById(@PathVariable("id") Integer id) {
         projectPositionFacade.deleteById(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return ResponseEntity.ok("ProjectPositions: " + id + "deleted");
     }
 }

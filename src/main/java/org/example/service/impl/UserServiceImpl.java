@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(Integer id, User updatedUser) {
-        User user = userRepository.getById(id);
+        User user = userRepository.findById(id).get();
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
         user.setJobTitle(updatedUser.getJobTitle());

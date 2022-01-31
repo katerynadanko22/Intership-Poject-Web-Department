@@ -63,13 +63,13 @@ public class UserController {
                                                            @RequestBody UserDTO dto)
             throws ResourceNotFoundException {
         UserDTO updated = userFacade.update(id, dto);
-        return ResponseEntity.ok("Project " + updated + " updated successfully");
+        return ResponseEntity.ok("User " + updated + " updated successfully");
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity deleteUserById(@PathVariable("id") Integer id) {
+    private ResponseEntity<String> deleteUserById(@PathVariable("id") Integer id) {
         userFacade.deleteById(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok("User: " + id + "deleted");
     }
 }
 
