@@ -1,5 +1,6 @@
 package org.example.configuration;
 
+import liquibase.integration.spring.SpringLiquibase;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,23 +27,23 @@ import java.util.Properties;
 @EnableTransactionManagement
 @PropertySource(value = {"classpath:application.properties"})
 @ComponentScan(value = {"org.example"})
-public class HibernateConfig {
+public class TestConfig {
 
     @Autowired
-    public HibernateConfig(Environment env) {
+    public TestConfig(Environment env) {
         this.env = env;
     }
     private final Environment env;
 
     public static final String ENTITY_BASE_PACKAGE = "org.example.entity";
-    public static final String DATASOURCE_DRIVER = "datasource.driver";
-    public static final String DATASOURCE_URL = "datasource.url";
+    public static final String DATASOURCE_DRIVER = "datasource.driver.test";
+    public static final String DATASOURCE_URL = "datasource.url.test";
     public static final String DATASOURCE_USERNAME = "datasource.username";
     public static final String DATASOURCE_PASSWORD = "datasource.password";
-    public static final String HIBERNATE_DIALECT = "hibernate.dialect";
+    public static final String HIBERNATE_DIALECT = "hibernate.dialect.test";
     public static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
     public static final String HIBERNATE_BATCH_SIZE = "hibernate.batch.size";
-    public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
+    public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto.test";
     public static final String HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS = "hibernate.current.session.context.class";
 
     @Bean
@@ -53,6 +54,14 @@ public class HibernateConfig {
         dataSource.setUsername(env.getRequiredProperty(DATASOURCE_USERNAME));
         dataSource.setPassword(env.getRequiredProperty(DATASOURCE_PASSWORD));
         return dataSource;
+    }
+
+    @Bean
+    public SpringLiquibase liquibase() {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setChangeLog("classpath:changelog-0.1.xml");
+        liquibase.setDataSource(getDataSource());
+        return liquibase;
     }
 
     @Bean
@@ -103,5 +112,4 @@ public class HibernateConfig {
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
-
 }
