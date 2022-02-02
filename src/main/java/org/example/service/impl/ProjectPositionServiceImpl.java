@@ -1,33 +1,21 @@
 package org.example.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.ProjectPosition;
 import org.example.repository.ProjectPositionRepository;
-import org.example.repository.ProjectRepository;
-import org.example.repository.UserRepository;
 import org.example.service.ProjectPositionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class ProjectPositionServiceImpl implements ProjectPositionService {
 
     private final ProjectPositionRepository projectPositionRepository;
-    private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
-
-    @Autowired
-    public ProjectPositionServiceImpl(ProjectPositionRepository projectPositionRepository,
-                                      UserRepository userRepository, ProjectRepository projectRepository) {
-        this.projectPositionRepository = projectPositionRepository;
-        this.userRepository = userRepository;
-        this.projectRepository = projectRepository;
-    }
 
     @Override
     public ProjectPosition save(ProjectPosition projectPosition) {
@@ -37,33 +25,21 @@ public class ProjectPositionServiceImpl implements ProjectPositionService {
     }
 
     @Override
-    public ProjectPosition getById(Integer id) {
-        if (!projectPositionRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        return projectPositionRepository.getById(id);
-    }
-
-    @Override
     public List<ProjectPosition> findAll() {
         log.info("projectPosition.getAll: " + projectPositionRepository.findAll());
         return projectPositionRepository.findAll();
     }
 
     @Override
-    public Optional<ProjectPosition> findById(Integer id) {
-        if (!projectPositionRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        return projectPositionRepository.findById(id);
+    public ProjectPosition findById(Integer id) {
+        return projectPositionRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such project position in BD"));
     }
 
     @Override
     public ProjectPosition update(Integer id, ProjectPosition updatedProjectPosition) {
-        if (!projectPositionRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        ProjectPosition projectPosition = projectPositionRepository.findById(id).get();
+
+        ProjectPosition projectPosition = projectPositionRepository.findById(id).orElseThrow(()->
+                new NoSuchElementException("No such project position in BD"));
         projectPosition.setProject(updatedProjectPosition.getProject());
         projectPosition.setUser(updatedProjectPosition.getUser());
         projectPosition.setPositionTitle(updatedProjectPosition.getPositionTitle());

@@ -1,5 +1,6 @@
 package org.example.facade;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.ProjectDTO;
 import org.example.entity.Project;
 import org.example.modelmapper.ProjectMapper;
@@ -10,21 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Transactional
+
+@RequiredArgsConstructor
 @Service
 public class ProjectFacade {
     private final ProjectService projectService;
     private final ProjectMapper mapper;
 
-    public ProjectFacade(ProjectService projectService, ProjectMapper mapper) {
-        this.projectService = projectService;
-
-        this.mapper = mapper;
-    }
-
+    @Transactional
     public ProjectDTO save(ProjectDTO projectDTO) {
-        Project savedProject = projectService
-                .save(mapper.toEntity(projectDTO));
+        Project savedProject = projectService.save(mapper.toEntity(projectDTO));
         ProjectDTO savedProjectDTO = mapper.toDto(savedProject);
         return savedProjectDTO;
     }
@@ -38,22 +34,18 @@ public class ProjectFacade {
     }
 
     public ProjectDTO findById(Integer id) {
-        return mapper.toDto(projectService.findById(id).get());
+        return mapper.toDto(projectService.findById(id));
     }
 
-    public ProjectDTO getById(Integer id) {
-        return mapper.toDto(projectService.getById(id));
-    }
-
+    @Transactional
     public ProjectDTO update(Integer id, ProjectDTO projectDTONew) {
         Project update = projectService.update(id, mapper.toEntity(projectDTONew));
         return mapper.toDto(update);
     }
 
+    @Transactional
     public void deleteById(Integer id) {
-        if (projectService.findById(id).isPresent()) {
             projectService.deleteById(id);
-        }
     }
 }
 

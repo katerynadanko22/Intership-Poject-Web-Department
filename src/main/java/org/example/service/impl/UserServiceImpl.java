@@ -1,36 +1,28 @@
 package org.example.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.User;
 import org.example.exception.DuplicateUserException;
 import org.example.exception.EmptyInputException;
-import org.example.modelmapper.UserMapper;
-import org.example.repository.DepartmentRepository;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final DepartmentRepository departmentRepository;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, DepartmentRepository departmentRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.departmentRepository = departmentRepository;
-    }
 
     @Override
     public User save(User user) {
         log.info(String.format("user.save {id = %d}", user.getId()));
+
         if (user.getFirstName().isEmpty() || user.getFirstName().length() == 0) {
             throw new EmptyInputException("Input fields are empty");
         }
@@ -49,25 +41,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Integer id) {
-        log.info("user.get by id: " + userRepository.getById(id));
-        return userRepository.getById(id);
-    }
-
-    @Override
-    public Optional<User> findById(Integer id) {
-        if (!userRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        return userRepository.findById(id);
+    public User findById(Integer id) {
+        return userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such user in BD"));
     }
 
     @Override
     public User update(Integer id, User updatedUser) {
-        if (!userRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        User user = userRepository.findById(id).get();
+
+        User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such user in BD"));
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
         user.setJobTitle(updatedUser.getJobTitle());
@@ -80,9 +61,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(Integer id) {
-        if (!userRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
         }
-        userRepository.deleteById(id);
     }
 }

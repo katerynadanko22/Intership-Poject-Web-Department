@@ -12,11 +12,10 @@ public interface ProjectPositionService {
 
     List<ProjectPosition> findAll();
 
-    Optional<ProjectPosition> findById(Integer id);
+    ProjectPosition findById(Integer id);
 
     ProjectPosition update(Integer id, ProjectPosition updatedProjectPosition);
 
     void deleteById(Integer id);
 
-    ProjectPosition getById(Integer id);
 }

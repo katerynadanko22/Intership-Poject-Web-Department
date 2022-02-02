@@ -1,5 +1,6 @@
 package org.example.facade;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ProjectDTO;
 import org.example.dto.ProjectPositionDTO;
@@ -14,7 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Transactional
+
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class ProjectPositionFacade {
@@ -22,24 +24,15 @@ public class ProjectPositionFacade {
     private final ProjectPositionService projectPositionService;
     private final ProjectPositionMapper mapper;
 
-    public ProjectPositionFacade(ProjectPositionService projectPositionService,
-                                 ProjectPositionMapper mapper) {
-        this.projectPositionService = projectPositionService;
-        this.mapper = mapper;
-    }
-
+    @Transactional
     public ProjectPositionDTO save(ProjectPositionDTO projectPositionDTO) {
-//                    log.info(String.format("ProjectPosition.save {id = %d, project = %s}",
-//                projectPositionDTO.getId(), projectPositionDTO.getProjectDTO()));
-            ProjectPosition savedProjectPosition = projectPositionService
-                    .save(mapper.toEntity(projectPositionDTO));
+            ProjectPosition savedProjectPosition = projectPositionService.save(mapper.toEntity(projectPositionDTO));
             ProjectPositionDTO savedProjectPositionDTO = mapper.toDto(savedProjectPosition);
             return savedProjectPositionDTO;
         }
 
-    public Optional<ProjectPositionDTO> findById(Integer id) {
-        return Optional.ofNullable(mapper.toDto(projectPositionService
-                .findById(id).get()));
+    public ProjectPositionDTO findById(Integer id) {
+        return mapper.toDto(projectPositionService.findById(id));
     }
 
     public List<ProjectPositionDTO> findAll() {
@@ -50,17 +43,14 @@ public class ProjectPositionFacade {
                 .collect(Collectors.toList());
     }
 
-    public ProjectPositionDTO getById(Integer id) {
-        return mapper.toDto(
-                (projectPositionService.getById(id)));
-    }
-
+    @Transactional
     public ProjectPositionDTO update(Integer id, ProjectPositionDTO projectPositionDTO) {
         ProjectPosition saveProjectPositionDTOInForm = projectPositionService.update
                 (id, mapper.toEntity(projectPositionDTO));
         return mapper.toDto(saveProjectPositionDTOInForm);
     }
 
+    @Transactional
     public void deleteById(Integer id) {
         projectPositionService.deleteById(id);
     }

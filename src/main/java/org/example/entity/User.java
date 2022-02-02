@@ -34,20 +34,8 @@ public class User {
     @Column(name = "job_title")
     private String jobTitle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department")
     private Department department;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", jobTitle='" + jobTitle + '\'' +
-                ", department=" + department +
-                '}';
-    }
 }

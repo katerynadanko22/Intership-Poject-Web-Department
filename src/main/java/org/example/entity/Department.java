@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 
-
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -24,11 +25,4 @@ public class Department {
     @Column(name = "title")
     private String title;
 
-    @Override
-    public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                '}';
-    }
 }

@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.Department;
 import org.example.repository.DepartmentRepository;
@@ -11,14 +12,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
-
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
-        this.departmentRepository = departmentRepository;
-    }
 
     @Override
     public Department save(Department department) {
@@ -34,27 +32,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Optional<Department> findById(Integer id) {
-        if (!departmentRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        return departmentRepository.findById(id);
-    }
-
-    @Override
-    public Department getById(Integer id) {
-        if (!departmentRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        return departmentRepository.getById(id);
+    public Department findById(Integer id) {
+        return departmentRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such department in BD"));
     }
 
     @Override
     public Department update(Integer id, Department departmentNew) {
-        if (!departmentRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        Department department = departmentRepository.findById(id).get();
+        Department department = departmentRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such department in BD"));
         department.setTitle(departmentNew.getTitle());
         return departmentRepository.save(department);
     }

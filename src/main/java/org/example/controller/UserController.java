@@ -1,15 +1,13 @@
 package org.example.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.ProjectDTO;
+import org.example.dto.DepartmentDTO;
 import org.example.dto.UserDTO;
+import org.example.dto.UserDTORegistration;
 import org.example.exception.ResourceNotFoundException;
-import org.example.exception.ValidationException;
 import org.example.facade.DepartmentFacade;
 import org.example.facade.UserFacade;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,59 +18,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
+@RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("api/users")
 public class UserController {
 
-    @Autowired
-    private UserFacade userFacade;
-    @Autowired
-    private DepartmentFacade departmentFacade;
+    private final UserFacade userFacade;
+    private final DepartmentFacade departmentFacade;
 
-
-    @PostMapping(value = "/save/{departmentId}")
-    private ResponseEntity<String> saveDepartment(@RequestBody UserDTO user,
-                                                  @PathVariable("departmentId") Integer departmentId) throws ValidationException {
-        if (departmentFacade.findById(departmentId)==null) {
-            throw new ResourceNotFoundException("No such department in DB");
-        }
-        user.setDepartmentDTO(departmentFacade.findById(departmentId));
-        UserDTO savedUser = userFacade.save(user);
-        return ResponseEntity.ok("User: " + savedUser + " saved successfully");
+    @PostMapping(value = "/{departmentId}")
+    private UserDTO save(@RequestBody UserDTORegistration userDTORegistration, @PathVariable("departmentId") Integer departmentId) {
+        userDTORegistration.setDepartment(departmentFacade.findById(departmentId));
+        return userFacade.save(userDTORegistration);
     }
 
-    @GetMapping("/find/{id}")
-    private ResponseEntity<String> findUserById(@PathVariable("id") Integer id) {
+    @GetMapping("/{id}")
+    private UserDTO findById(@PathVariable("id") Integer id) {
         UserDTO user = userFacade.findById(id);
-        return ResponseEntity.ok("User with id: " + id + " has name: " + user);
-    }
-
-    @GetMapping("/get/{id}")
-    private ResponseEntity<String> getUserById(@PathVariable("id") Integer id) {
-        UserDTO user = userFacade.getById(id);
-        return ResponseEntity.ok("User with id: " + id + " has name: " + user);
+        return user;
     }
 
     @GetMapping(value = "/")
-    private ResponseEntity<String> showAllUsers() {
+    private List<UserDTO> getAll() {
         List<UserDTO> users = userFacade.findAll();
-        return ResponseEntity.ok("Users: " + users);
+        return users;
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<String> updatePutProjectDTOById(@PathVariable("id") Integer id,
-                                                           @RequestBody UserDTO dto)
+    private UserDTO update(@PathVariable("id") Integer id, @RequestBody UserDTO dto)
             throws ResourceNotFoundException {
         UserDTO updated = userFacade.update(id, dto);
-        return ResponseEntity.ok("User " + updated + " updated successfully");
+        return updated;
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<String> deleteUserById(@PathVariable("id") Integer id) {
+    private String delete(@PathVariable("id") Integer id) {
         userFacade.deleteById(id);
-        return ResponseEntity.ok("User: " + id + "deleted");
+        return"User: " + id + "deleted successfully";
     }
 }
 

@@ -11,9 +11,7 @@ public interface DepartmentService {
 
     List<Department> findAll();
 
-    Optional<Department> findById(Integer id);
-
-    Department getById(Integer id);
+    Department findById(Integer id);
 
     Department update(Integer id, Department departmentNew);
 

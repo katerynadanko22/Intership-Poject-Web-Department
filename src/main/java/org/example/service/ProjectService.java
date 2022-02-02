@@ -10,13 +10,12 @@ public interface ProjectService {
 
     List<Project> findAll();
 
-    Optional<Project> findById(Integer id);
+    Project findById(Integer id);
 
     Project update(Integer id, Project updatedProject);
 
     void deleteById(Integer id);
 
-    Project getById(Integer id);
 }
 
 

@@ -23,6 +23,7 @@
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
         <hibernate.version>5.4.29.Final</hibernate.version>
         <hibernate.validator.version>7.0.1.Final</hibernate.validator.version>
+        <h2.version>2.1.210</h2.version>
         <postgresql.version>42.3.1</postgresql.version>
         <servlet.version>4.0.0</servlet.version>
         <lombok.version>1.18.22</lombok.version>
@@ -39,6 +40,7 @@
         <hamcrest.library.version>2.2</hamcrest.library.version>
         <json.path.version>2.5.0</json.path.version>
         <modelmapper.version>2.3.8</modelmapper.version>
+        <hamcrest.version>2.2</hamcrest.version>
         <maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
         <maven.resources.plugin.version>3.0.2</maven.resources.plugin.version>
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
@@ -126,6 +128,13 @@
             <artifactId>hibernate-validator-annotation-processor</artifactId>
             <version>${hibernate.validator.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -244,6 +253,19 @@
             <artifactId>modelmapper</artifactId>
             <version>${modelmapper.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 

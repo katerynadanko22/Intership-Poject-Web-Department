@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import java.time.LocalDate;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDTO {

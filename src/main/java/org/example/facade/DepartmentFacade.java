@@ -1,5 +1,6 @@
 package org.example.facade;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.DepartmentDTO;
 import org.example.entity.Department;
@@ -11,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Transactional
+
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class DepartmentFacade {
@@ -19,11 +21,7 @@ public class DepartmentFacade {
     private final DepartmentService departmentService;
     private final DepartmentMapper mapper;
 
-    public DepartmentFacade(DepartmentService departmentService, DepartmentMapper mapper) {
-        this.departmentService = departmentService;
-        this.mapper = mapper;
-    }
-
+    @Transactional
     public DepartmentDTO save(DepartmentDTO departmentDTO) {
         Department entity = mapper.toEntity(departmentDTO);
         Department saved = departmentService.save(entity);
@@ -39,18 +37,16 @@ public class DepartmentFacade {
     }
 
     public DepartmentDTO findById(Integer id) {
-        return mapper.toDto(departmentService.findById(id).get());
+        return mapper.toDto(departmentService.findById(id));
     }
 
-    public DepartmentDTO getById(Integer id) {
-        return mapper.toDto(departmentService.getById(id));
-    }
-
+    @Transactional
     public DepartmentDTO update(Integer id, DepartmentDTO departmentDTONew) {
         Department update = departmentService.update(id, mapper.toEntity(departmentDTONew));
         return mapper.toDto(update);
     }
 
+    @Transactional
     public void deleteById(Integer id) {
         departmentService.deleteById(id);
     }

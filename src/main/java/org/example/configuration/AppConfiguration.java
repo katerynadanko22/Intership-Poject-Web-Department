@@ -30,6 +30,6 @@ public class AppConfiguration {
                 .setFieldMatchingEnabled(true)
                 .setSkipNullEnabled(true)
                 .setFieldAccessLevel(PRIVATE);
-        return new ModelMapper();
+        return mapper;
     }
 }

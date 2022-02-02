@@ -1,26 +1,21 @@
 package org.example.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.Project;
 import org.example.repository.ProjectRepository;
 import org.example.service.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
-
-    @Autowired
-    public ProjectServiceImpl(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
-    }
 
     @Valid
     @Override
@@ -37,27 +32,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<Project> findById(Integer id) {
-        if (!projectRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        return projectRepository.findById(id);
-    }
-
-    @Override
-    public Project getById(Integer id) {
-        if (!projectRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        return projectRepository.getById(id);
+    public Project findById(Integer id) {
+        return projectRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such project in BD"));
     }
 
     @Override
     public Project update(Integer id, Project updatedProject) {
-        if (!projectRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        }
-        Project project = projectRepository.findById(id).get();
+
+        Project project = projectRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such project in BD"));
         project.setTitle(updatedProject.getTitle());
         project.setStartDate(updatedProject.getStartDate());
         project.setEndDate(updatedProject.getEndDate());

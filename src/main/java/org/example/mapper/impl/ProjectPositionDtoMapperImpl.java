@@ -13,8 +13,8 @@
 //            return null;
 //        }
 //        ProjectPositionDTO projectPositionDTO = new ProjectPositionDTO();
-//        projectPositionDTO.setProject(projectPosition.getProject());
-//        projectPositionDTO.setUser(projectPosition.getUser());
+//        projectPositionDTO.setProjectDTO(projectPosition.getProject());
+//        projectPositionDTO.setUserDTO(projectPosition.getUser());
 //        projectPositionDTO.setPositionTitle(projectPosition.getPositionTitle());
 //        projectPositionDTO.setPositionStartDate(projectPosition.getPositionStartDate());
 //        projectPositionDTO.setPositionEndDate(projectPosition.getPositionEndDate());

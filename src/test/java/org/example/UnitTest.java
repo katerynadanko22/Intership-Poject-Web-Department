@@ -25,7 +25,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class UnitTest {
 
     @Mock
     private UserRepository userRepositoryMock;

@@ -13,6 +13,11 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
         return new Class[]{HibernateConfig.class};
     }
 
+//    @Override
+//    protected Class<?>[] getServletConfigClasses() {
+//        return new Class[]{AppConfiguration.class};
+//    }
+
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
