@@ -14,9 +14,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+
 @EnableWebSecurity
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -36,7 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+//                .antMatchers("/api/departments/**").permitAll()
+                .antMatchers(POST, "/api/**").hasAuthority("write")
+                .antMatchers(DELETE, "/api/**").hasAuthority("write")
+                .antMatchers(PUT, "/api/**").hasAuthority("write")
+                .antMatchers(GET, "/api/**").hasAnyAuthority("write", "read")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

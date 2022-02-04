@@ -6,6 +6,7 @@ import org.example.entity.User;
 import org.example.exception.DuplicateEntityException;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    //    @Nullable
+    @Nullable
     @Override
     public User save(User user) {
         log.info("user start to save with id{} ", user.getId());

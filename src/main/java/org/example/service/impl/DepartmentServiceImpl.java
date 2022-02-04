@@ -7,6 +7,7 @@ import org.example.entity.Department;
 import org.example.exception.DuplicateEntityException;
 import org.example.repository.DepartmentRepository;
 import org.example.service.DepartmentService;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.NoSuchElementException;
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
 
+    @Nullable
     @Override
     public Department save(Department department) {
         log.info("department start to save with id{} ", department.getId());

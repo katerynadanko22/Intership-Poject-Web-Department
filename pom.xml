@@ -44,6 +44,7 @@
         <hamcrest.version>2.2</hamcrest.version>
         <maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
         <thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
+        <swagger.version>2.9.2</swagger.version>
         <maven.resources.plugin.version>3.0.2</maven.resources.plugin.version>
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
@@ -300,6 +301,22 @@
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
             <version>${thymeleaf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
 
     </dependencies>
