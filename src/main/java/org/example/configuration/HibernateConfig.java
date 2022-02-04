@@ -32,6 +32,7 @@ public class HibernateConfig {
     public HibernateConfig(Environment env) {
         this.env = env;
     }
+
     private final Environment env;
 
     public static final String ENTITY_BASE_PACKAGE = "org.example.entity";

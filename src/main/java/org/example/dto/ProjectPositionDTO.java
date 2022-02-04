@@ -13,9 +13,9 @@ import java.time.LocalDate;
 public class ProjectPositionDTO {
     private Integer id;
     private String positionTitle;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate positionStartDate;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate positionEndDate;
 
     private UserDTO user;

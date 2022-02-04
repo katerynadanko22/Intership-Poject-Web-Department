@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ProjectDTO;
 import org.example.exception.ResourceNotFoundException;
 import org.example.facade.ProjectFacade;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,17 +25,20 @@ public class ProjectController {
     private final ProjectFacade projectFacade;
 
     @PostMapping(value = "/")
+    @PreAuthorize("hasAuthority('write')")
     private ProjectDTO save(@RequestBody ProjectDTO projectDTO) {
         ProjectDTO savedProjectDTO = projectFacade.save(projectDTO);
         return savedProjectDTO;
     }
 
+    @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/")
     private List<ProjectDTO> getAll() {
         List<ProjectDTO> projects = projectFacade.findAll();
         return projects;
     }
 
+    @PreAuthorize("hasAuthority('read')")
     @GetMapping("/{id}")
     ProjectDTO findById(@PathVariable("id") Integer id) {
         ProjectDTO projectDTO = projectFacade.findById(id);
@@ -43,14 +46,16 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('write')")
     private ProjectDTO update(@PathVariable("id") Integer id,
-                                                           @RequestBody ProjectDTO projectDTONew)
+                              @RequestBody ProjectDTO projectDTONew)
             throws ResourceNotFoundException {
         ProjectDTO updated = projectFacade.update(id, projectDTONew);
         return updated;
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('write'')")
     private String delete(@PathVariable("id") Integer id) {
         projectFacade.deleteById(id);
         return "Project: " + id + "deleted successfully";

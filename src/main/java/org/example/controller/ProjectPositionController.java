@@ -7,6 +7,7 @@ import org.example.exception.ResourceNotFoundException;
 import org.example.facade.ProjectFacade;
 import org.example.facade.ProjectPositionFacade;
 import org.example.facade.UserFacade;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -28,7 +28,7 @@ public class ProjectPositionController {
     private final UserFacade userFacade;
     private final ProjectFacade projectFacade;
 
-
+    @PreAuthorize("hasAuthority('write')")
     @PostMapping(value = "/{userId}/{projectId}")
     private ProjectPositionDTO save(@RequestBody ProjectPositionDTO projectPosition,
                                     @PathVariable("userId") Integer userId,
@@ -38,18 +38,20 @@ public class ProjectPositionController {
         return projectPositionFacade.save(projectPosition);
     }
 
+    @PreAuthorize("hasAuthority('read')")
     @GetMapping("/{id}")
     ProjectPositionDTO findById(@PathVariable("id") Integer id) {
-        ProjectPositionDTO projectPosition = projectPositionFacade.findById(id);
-        return projectPosition;
+        return projectPositionFacade.findById(id);
     }
 
+    @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/")
     private List<ProjectPositionDTO> getAll() {
         List<ProjectPositionDTO> projectPositions = projectPositionFacade.findAll();
         return projectPositions;
     }
 
+    @PreAuthorize("hasAuthority('write')")
     @PutMapping("/{id}")
     private ProjectPositionDTO update(@PathVariable("id") Integer id,
                                       @RequestBody ProjectPositionDTO dto)
@@ -58,6 +60,7 @@ public class ProjectPositionController {
         return updated;
     }
 
+    @PreAuthorize("hasAuthority('write')")
     @DeleteMapping("/{id}")
     private String delete(@PathVariable("id") Integer id) {
         projectPositionFacade.deleteById(id);

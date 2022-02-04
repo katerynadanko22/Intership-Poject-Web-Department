@@ -7,11 +7,10 @@
 //
 //@Component
 //public class UserDtoMapperImpl implements UserDtoMapper {
+//    @NotNull
 //    @Override
 //    public UserDTO toUserDto(User user) {
-//        if (user == null) {
-//            return null;
-//        }
+//
 //        UserDTO userDTO = new UserDTO();
 //        userDTO.setFirstName(user.getFirstName());
 //        userDTO.setLastName(user.getLastName());
@@ -22,11 +21,11 @@
 //        return userDTO;
 //    }
 //
+//
+//    @NotNull
 //    @Override
 //    public User toUser(UserDTO userDTO) {
-//        if (userDTO == null) {
-//            return null;
-//        }
+//
 //        User user = new User();
 //        user.setFirstName(userDTO.getFirstName());
 //        user.setLastName(userDTO.getLastName());
