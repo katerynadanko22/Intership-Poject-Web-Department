@@ -38,8 +38,8 @@
 //    public static final String ENTITY_BASE_PACKAGE = "org.example.entity";
 //    public static final String DATASOURCE_DRIVER = "datasource.driver.test";
 //    public static final String DATASOURCE_URL = "datasource.url.test";
-//    public static final String DATASOURCE_USERNAME = "datasource.username";
-//    public static final String DATASOURCE_PASSWORD = "datasource.password";
+//    public static final String DATASOURCE_USERNAME = "datasource.username.test";
+//    public static final String DATASOURCE_PASSWORD = "datasource.password.test";
 //    public static final String HIBERNATE_DIALECT = "hibernate.dialect.test";
 //    public static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
 //    public static final String HIBERNATE_BATCH_SIZE = "hibernate.batch.size";

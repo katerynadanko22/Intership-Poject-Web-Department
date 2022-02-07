@@ -6,7 +6,9 @@ import org.example.entity.User;
 import org.example.exception.DuplicateEntityException;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,9 @@ import java.util.NoSuchElementException;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final UserRepository userRepository;
 
     @Nullable
@@ -26,6 +31,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsUserByEmail(user.getEmail())) {
             throw new DuplicateEntityException("User already exist");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.error("user already exist with id{} ", user.getId());
         return userRepository.save(user);
     }
@@ -51,7 +57,7 @@ public class UserServiceImpl implements UserService {
         user.setJobTitle(userNew.getJobTitle());
         user.setDepartment(userNew.getDepartment());
         user.setEmail(userNew.getEmail());
-        user.setPassword(userNew.getPassword());
+        user.setPassword(passwordEncoder.encode(userNew.getPassword()));
         user.setPassword(userNew.getPassword());
         return userRepository.save(user);
     }

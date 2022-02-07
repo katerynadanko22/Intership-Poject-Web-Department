@@ -1,5 +1,9 @@
 package org.example.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ProjectPositionDTO;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Api(value = "Swagger2DemoRestController", description = "REST Apis related to ProjectPosition Entity")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
@@ -28,7 +33,8 @@ public class ProjectPositionController {
     private final UserFacade userFacade;
     private final ProjectFacade projectFacade;
 
-    @PreAuthorize("hasAuthority('write')")
+    @ApiOperation(value = "Save new ProjectPosition in the System ", response = ProjectPositionDTO.class, tags = "saveProjectPosition")
+    @PreAuthorize("hasAnyAuthority('read','write')")
     @PostMapping(value = "/{userId}/{projectId}")
     private ProjectPositionDTO save(@RequestBody ProjectPositionDTO projectPosition,
                                     @PathVariable("userId") Integer userId,
@@ -38,12 +44,19 @@ public class ProjectPositionController {
         return projectPositionFacade.save(projectPosition);
     }
 
+    @ApiOperation(value = "Get specific ProjectPosition in the System ", response = ProjectPositionDTO.class, tags = "geProjectPosition")
     @PreAuthorize("hasAuthority('read')")
     @GetMapping("/{id}")
     ProjectPositionDTO findById(@PathVariable("id") Integer id) {
         return projectPositionFacade.findById(id);
     }
 
+    @ApiOperation(value = "Get list of ProjectPositions in the System ", response = Iterable.class, tags = "getProjectPositions")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 401, message = "not authorized!"),
+            @ApiResponse(code = 403, message = "forbidden!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
     @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/")
     private List<ProjectPositionDTO> getAll() {
@@ -51,7 +64,8 @@ public class ProjectPositionController {
         return projectPositions;
     }
 
-    @PreAuthorize("hasAuthority('write')")
+    @ApiOperation(value = "Update ProjectPosition in the System ", response = ProjectPositionDTO.class, tags = "updateProjectPosition")
+    @PreAuthorize("hasAnyAuthority('read','write')")
     @PutMapping("/{id}")
     private ProjectPositionDTO update(@PathVariable("id") Integer id,
                                       @RequestBody ProjectPositionDTO dto)
@@ -60,10 +74,22 @@ public class ProjectPositionController {
         return updated;
     }
 
-    @PreAuthorize("hasAuthority('write')")
+    @ApiOperation(value = "Delete ProjectPosition by id in the System", response = Integer.class, tags = "deleteProjectPosition")
+    @PreAuthorize("hasAnyAuthority('read','write')")
     @DeleteMapping("/{id}")
     private String delete(@PathVariable("id") Integer id) {
         projectPositionFacade.deleteById(id);
         return "ProjectPositions: " + id + "deleted successfully";
     }
 }
+
+
+
+
+
+
+
+
+
+
+

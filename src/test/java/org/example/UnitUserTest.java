@@ -9,6 +9,8 @@
 //import static org.mockito.Mockito.when;
 //
 //import org.example.entity.Department;
+//import org.example.entity.Role;
+//import org.example.entity.Status;
 //import org.example.entity.User;
 //import org.example.repository.UserRepository;
 //import org.example.service.impl.UserServiceImpl;
@@ -25,7 +27,7 @@
 //import java.util.Optional;
 //
 //@ExtendWith(MockitoExtension.class)
-//public class UnitTest {
+//public class UnitUserTest {
 //
 //    @Mock
 //    private UserRepository userRepositoryMock;
@@ -36,7 +38,7 @@
 //    @Test
 //    public void testSaveUser() {
 //        User userKate = new User(10, "Kate", "Danko", "kateryna@mali.com",
-//                "katekate", "Jun", new Department(1, "dev"));
+//                "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(1, "dev"));
 //        when(userRepositoryMock.save(userKate)).thenReturn(userKate);
 //        User savedUser = userServiceMock.save(userKate);
 //        assertEquals("Kate", savedUser.getFirstName());
