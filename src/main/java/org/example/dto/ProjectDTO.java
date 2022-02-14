@@ -15,10 +15,10 @@ public class ProjectDTO {
     private Integer id;
     @ApiModelProperty(notes = "Title of the Project", name = "Title", required = true, value = "Java Project")
     private String title;
-    @ApiModelProperty(notes = "Start date of the Project", name = "Start", required = true, value = "16.02.2022")
+    @ApiModelProperty(notes = "Start date of the Project", name = "Start", required = true, value = "16-02-2022")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate startDate;
-    @ApiModelProperty(notes = "End date of the Project", name = "End", required = true, value = "26.02.2022")
+    @ApiModelProperty(notes = "End date of the Project", name = "End", required = true, value = "26-02-2022")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate endDate;
 }

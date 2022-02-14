@@ -23,8 +23,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public Department save(Department department) {
         log.info("department start to save with id{} ", department.getId());
-        if (departmentRepository.existsByTitle(department.getTitle()))
+        if (departmentRepository.existsByTitle(department.getTitle())) {
             throw new DuplicateEntityException("Department already exist");
+        }
         log.error("department already exist with id{} ", department.getId());
         return departmentRepository.save(department);
     }

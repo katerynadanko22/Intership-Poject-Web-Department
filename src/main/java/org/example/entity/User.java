@@ -1,6 +1,5 @@
 package org.example.entity;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.servlet.annotation.MultipartConfig;
 
+@MultipartConfig
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

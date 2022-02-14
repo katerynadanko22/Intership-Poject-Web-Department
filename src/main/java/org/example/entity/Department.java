@@ -27,5 +27,8 @@ public class Department {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
+    public Department(Integer id) {
+        this.id = id;
+    }
 }
 
