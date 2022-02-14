@@ -1,17 +1,18 @@
 package org.example.modelmapper;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.DepartmentDTO;
 import org.example.entity.Department;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+@RequiredArgsConstructor
 @Component
 public class DepartmentMapper {
-    @Autowired
-    private ModelMapper mapper;
+
+    private final ModelMapper mapper;
 
 
     public Department toEntity(DepartmentDTO dto) {

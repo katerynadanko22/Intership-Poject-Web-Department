@@ -1,17 +1,18 @@
 package org.example.modelmapper;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.ProjectPositionDTO;
 import org.example.entity.ProjectPosition;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+@RequiredArgsConstructor
 @Component
 public class ProjectPositionMapper {
-    @Autowired
-    private ModelMapper mapper;
+
+    private final ModelMapper mapper;
 
     public ProjectPosition toEntity(ProjectPositionDTO dto) {
         return Objects.isNull(dto) ? null : mapper.map(dto, ProjectPosition.class);

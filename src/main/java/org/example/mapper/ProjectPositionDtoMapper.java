@@ -5,5 +5,6 @@ import org.example.entity.ProjectPosition;
 
 public interface ProjectPositionDtoMapper {
     ProjectPositionDTO toProjectPositionDto(ProjectPosition projectPosition);
+
     ProjectPosition toProjectPosition(ProjectPositionDTO projectPositionDTO);
 }

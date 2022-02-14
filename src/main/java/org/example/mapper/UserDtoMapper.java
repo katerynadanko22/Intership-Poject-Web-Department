@@ -5,5 +5,6 @@ import org.example.entity.User;
 
 public interface UserDtoMapper {
     UserDTO toUserDto(User user);
+
     User toUser(UserDTO userDTO);
 }

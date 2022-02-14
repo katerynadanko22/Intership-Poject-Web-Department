@@ -3,7 +3,6 @@ package org.example.service;
 import org.example.entity.Project;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProjectService {
     Project save(Project project);

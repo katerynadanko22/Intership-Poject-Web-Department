@@ -1,8 +1,7 @@
 package org.example.handler;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.example.exception.DuplicateUserException;
+import org.example.exception.DuplicateEntityException;
 import org.example.exception.EmptyInputException;
 import org.example.exception.ResourceNotFoundException;
 import org.example.exception.ValidationException;
@@ -14,29 +13,32 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.NoSuchElementException;
 
-@Slf4j
 @AllArgsConstructor
 @ControllerAdvice
 @EnableWebMvc
 public class EntityExceptionController {
 
-    @ExceptionHandler(EmptyInputException.class )
+    @ExceptionHandler(EmptyInputException.class)
     public ResponseEntity<String> handleEmptyInputException(EmptyInputException e) {
         return new ResponseEntity<String>("Input field is empty", HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(ResourceNotFoundException.class )
+
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException e) {
         return new ResponseEntity<String>("No such element found!", HttpStatus.NOT_FOUND);
     }
-    @ExceptionHandler(NoSuchElementException.class )
+
+    @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException e) {
         return new ResponseEntity<String>("No such element found!", HttpStatus.NOT_FOUND);
     }
-    @ExceptionHandler(DuplicateUserException.class )
-    public ResponseEntity<String> handleDuplicateUserException(DuplicateUserException e) {
+
+    @ExceptionHandler(DuplicateEntityException.class)
+    public ResponseEntity<String> handleDuplicateUserException(DuplicateEntityException e) {
         return new ResponseEntity<String>("User already exist!", HttpStatus.CONFLICT);
     }
-    @ExceptionHandler(ValidationException.class )
+
+    @ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> handleValidationException(ValidationException e) {
         return new ResponseEntity<String>("Email ", HttpStatus.BAD_REQUEST);
     }

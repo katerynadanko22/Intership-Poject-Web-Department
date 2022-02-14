@@ -7,11 +7,11 @@
 //
 //@Component
 //public class ProjectPositionDtoMapperImpl implements ProjectPositionDtoMapper {
+
+//@NotNull
 //    @Override
 //    public ProjectPositionDTO toProjectPositionDto(ProjectPosition projectPosition) {
-//        if (projectPosition == null) {
-//            return null;
-//        }
+//
 //        ProjectPositionDTO projectPositionDTO = new ProjectPositionDTO();
 //        projectPositionDTO.setProjectDTO(projectPosition.getProject());
 //        projectPositionDTO.setUserDTO(projectPosition.getUser());
@@ -20,12 +20,10 @@
 //        projectPositionDTO.setPositionEndDate(projectPosition.getPositionEndDate());
 //        return projectPositionDTO;
 //    }
-//
+//@NotNull
 //    @Override
 //    public ProjectPosition toProjectPosition(ProjectPositionDTO projectPositionDTO) {
-//        if (projectPositionDTO == null) {
-//            return null;
-//        }
+//
 //        ProjectPosition projectPosition = new ProjectPosition();
 //        projectPosition.setProject(projectPositionDTO.getProject());
 //        projectPosition.setUser(projectPositionDTO.getUser());

@@ -3,6 +3,7 @@ package org.example.configuration;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return null;
@@ -10,16 +11,12 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{HibernateConfig.class};
+        return new Class[]{AppConfiguration.class};
     }
-
-//    @Override
-//    protected Class<?>[] getServletConfigClasses() {
-//        return new Class[]{AppConfiguration.class};
-//    }
 
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }
+
 }
