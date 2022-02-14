@@ -27,15 +27,6 @@ public class UserFacade {
         return mapper.registrationToDto(savedUserDTORegistration);
     }
 
-//    @Transactional(readOnly = true)
-//    public List<UserDTO> findByRoleId(Integer roleId) {
-//        List<User> users = userService.findByRoleId(roleId);
-//        return users
-//                .stream()
-//                .map(mapper::toDto)
-//                .collect(Collectors.toList());
-//    }
-
     public UserDTO findById(Integer id) {
         return mapper.toDto(userService.findById(id));
     }

@@ -13,4 +13,7 @@ public class DepartmentDTO {
     @ApiModelProperty(notes = "Title of the Department",name="Title",required=true, value="Java Department")
     private String title;
 
+    public DepartmentDTO(Integer id) {
+        this.id = id;
+    }
 }

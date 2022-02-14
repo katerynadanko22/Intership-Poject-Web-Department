@@ -19,9 +19,7 @@ import java.util.NoSuchElementException;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     @Nullable
@@ -58,7 +56,6 @@ public class UserServiceImpl implements UserService {
         user.setDepartment(userNew.getDepartment());
         user.setEmail(userNew.getEmail());
         user.setPassword(passwordEncoder.encode(userNew.getPassword()));
-        user.setPassword(userNew.getPassword());
         return userRepository.save(user);
     }
 

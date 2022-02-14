@@ -53,5 +53,23 @@ public class ProjectPositionFacade {
     public void deleteById(Integer id) {
         projectPositionService.deleteById(id);
     }
+
+    @Transactional
+    public List<ProjectPositionDTO> findAllAvailableNow(){
+        List<ProjectPosition> allAvailableNow = projectPositionService.findAllAvailableNow();
+        return allAvailableNow
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ProjectPositionDTO> findAllAvailableNext(int days){
+        List<ProjectPosition> allAvailableNext = projectPositionService.findAllAvailableNext(days);
+        return allAvailableNext
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
 

@@ -81,6 +81,30 @@ public class ProjectPositionController {
         projectPositionFacade.deleteById(id);
         return "ProjectPositions: " + id + "deleted successfully";
     }
+
+    @ApiOperation(value = "Get list of ProjectPositions Available Now in the System ", response = Iterable.class, tags = "findAllAvailableNow")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 401, message = "not authorized!"),
+            @ApiResponse(code = 403, message = "forbidden!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PreAuthorize("hasAuthority('read')")
+    @GetMapping(value = "/available-now")
+    private List<ProjectPositionDTO> findAllAvailableNow() {
+        return projectPositionFacade.findAllAvailableNow();
+    }
+
+    @ApiOperation(value = "Get list of ProjectPositions Available Next in the System ", response = Iterable.class, tags = "findAllAvailableNext")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 401, message = "not authorized!"),
+            @ApiResponse(code = 403, message = "forbidden!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PreAuthorize("hasAuthority('read')")
+    @GetMapping(value = "/available-next/{days}")
+    private List<ProjectPositionDTO> findAllAvailableNext(@PathVariable("days")  int days) {
+        return projectPositionFacade.findAllAvailableNext(days);
+    }
 }
 
 
