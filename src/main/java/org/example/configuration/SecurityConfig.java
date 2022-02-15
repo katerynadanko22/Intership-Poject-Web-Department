@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(DELETE, "/api/**").hasAnyAuthority("read", "write")
                 .antMatchers(PUT, "/api/**").hasAnyAuthority("read", "write")
                 .antMatchers(GET, "/api/**").hasAuthority("read")
-                .antMatchers(GET, "/api/users/upload/csv").hasAnyAuthority("read", "write")
+                .antMatchers(GET, "/api/users/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
