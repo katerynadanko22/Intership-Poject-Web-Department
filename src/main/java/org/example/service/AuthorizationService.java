@@ -6,6 +6,7 @@ import org.example.entity.User;
 import java.util.List;
 
 public interface AuthorizationService {
+
     User registerUser(User user);
 
     List<User> registerAll(List<User> users);

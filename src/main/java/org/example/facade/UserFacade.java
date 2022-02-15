@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.UserDTO;
 import org.example.dto.UserDTORegistration;
+import org.example.entity.ResetPassword;
 import org.example.entity.User;
 import org.example.modelmapper.UserMapper;
 import org.example.service.UserService;
@@ -21,11 +22,30 @@ public class UserFacade {
     private final UserMapper mapper;
 
     @Transactional
-    public UserDTO save(UserDTORegistration userDTORegistration) {
-        User savedUser = userService.save(mapper.registrationToEntity(userDTORegistration));
+    public UserDTO registerUser(UserDTORegistration userDTORegistration) {
+        User savedUser = userService.registerUser(mapper.registrationToEntity(userDTORegistration));
         UserDTORegistration savedUserDTORegistration = mapper.entityToRegistration(savedUser);
         return mapper.registrationToDto(savedUserDTORegistration);
     }
+
+    @Transactional
+    public List<UserDTORegistration> registerAll(List<User> users1) {
+        List<User> users = userService.registerAll(users1);
+        return users
+                .stream()
+                .map(mapper::entityToRegistration)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public UserDTORegistration resetPassword(ResetPassword resetPassword) {
+        return mapper.entityToRegistration(userService.resetPassword(resetPassword));
+    }
+
+
+
+
+
 
     public UserDTO findById(Integer id) {
         return mapper.toDto(userService.findById(id));

@@ -45,7 +45,7 @@ public class UserTest {
         User user = new User(10, "TestName", "Danko", "kateryna@mali.com",
                 "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(1, "dev"));
         when(userRepositoryMock.save(ArgumentMatchers.any(User.class))).thenReturn(user);
-        User created = userServiceMock.save(user);
+        User created = userServiceMock.registerUser(user);
         assertThat(created.getFirstName()).isSameAs(user.getFirstName());
         verify(userRepositoryMock).save(user);
     }
@@ -55,7 +55,7 @@ public class UserTest {
         User user = new User(1, "TestName", "Danko", "kateryna@mail.com",
                 "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(1, "dev"));
         when(userRepositoryMock.existsUserByEmail(user.getEmail())).thenReturn(true);
-        Assertions.assertThrows(DuplicateEntityException.class, () -> userServiceMock.save(user));
+        Assertions.assertThrows(DuplicateEntityException.class, () -> userServiceMock.registerUser(user));
         verify(userRepositoryMock).existsUserByEmail(user.getEmail());
     }
 

@@ -2,15 +2,18 @@ package org.example.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.entity.ResetPassword;
 import org.example.entity.User;
 import org.example.exception.DuplicateEntityException;
+import org.example.exception.InvalidPasswordException;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Nullable
     @Override
-    public User save(User user) {
+    public User registerUser(User user) {
         log.info("user start to save with id{} ", user.getId());
         if (userRepository.existsUserByEmail(user.getEmail())) {
             throw new DuplicateEntityException("User already exist");
@@ -33,6 +36,38 @@ public class UserServiceImpl implements UserService {
         log.error("user already exist with id{} ", user.getId());
         return userRepository.save(user);
     }
+    @Override
+    @Transactional
+    public List<User> registerAll(List<User> users) {
+        List<User> saved = new ArrayList<>();
+        for (User u : users) {
+            saved.add(registerUser(u));
+        }
+        return saved;
+    }
+
+    @Override
+    @Transactional
+    public User resetPassword(ResetPassword resetPassword) {
+        User user = userRepository.findByEmail(resetPassword.getEmail())
+                .orElseThrow(() -> new NoSuchElementException(String.format("Employee with username=%s not found",
+                        resetPassword.getEmail()))
+                );
+        if (!passwordEncoder.matches(resetPassword.getPasswordOld(), user.getPassword())) {
+            throw new InvalidPasswordException("You entered incorrect old password");
+        }
+        user.setPassword(passwordEncoder.encode(resetPassword.getPasswordNew()));
+        return user;
+    }
+
+
+
+
+
+
+
+
+
 
     @Override
     public List<User> findAll() {

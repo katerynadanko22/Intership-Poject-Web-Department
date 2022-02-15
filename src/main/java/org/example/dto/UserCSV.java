@@ -15,15 +15,11 @@ import java.time.LocalDate;
 @Builder
 public class UserCSV {
 
-    @CsvBindByName
     private Integer id;
-    @CsvBindByName
     private String firstName;
-    @CsvBindByName
     private String lastName;
-    @CsvBindByName
     private String email;
-    @CsvBindByName
+    private String password;
     private String jobTitle;
 
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")

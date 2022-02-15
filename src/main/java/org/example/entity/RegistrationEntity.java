@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.dto.DepartmentDTO;
 import org.example.dto.UserDTORegistration;
 
 import javax.validation.constraints.NotBlank;
@@ -33,8 +34,14 @@ public class RegistrationEntity {
     @NotBlank
     private Role role;
 
-    public UserDTORegistration toDTO() {
-        return UserDTORegistration.builder()
+    @NotBlank
+    private Status status;
+
+    @NotBlank
+    private DepartmentDTO department;
+
+    public RegistrationEntity toDTO() {
+        return RegistrationEntity.builder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .password(password)

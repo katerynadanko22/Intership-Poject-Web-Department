@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -57,7 +58,7 @@ class DepartmentControllerTest {
     }
 
     @Test
-//    @WithMockUser(username = "admin@mail.com", roles = {"USER", "ADMIN"})
+//    @WithMockUser(username = "admin@mail.com", roles = {"ROLE_ADMIN"})
     public void createDepartmentSuccessTest() throws Exception {
         mockMvc
                 .perform(
@@ -85,6 +86,7 @@ class DepartmentControllerTest {
 //    }
 //
     @Test
+//    @WithMockUser(username = "admin@mail.com", roles = {"ROLE_ADMIN"})
     public void createDepartmentClientErrorStatusTest() throws Exception {
         departmentRepository.save(Department.builder().title("java-department").build());
         mockMvc
@@ -97,6 +99,7 @@ class DepartmentControllerTest {
     }
 
     @Test
+//    @WithMockUser(username = "admin@mail.com", roles = {"ROLE_USER", "ROLE_ADMIN"})
     public void findDepartmentByIdSuccessTest() throws Exception {
         Department department =
                 departmentRepository.save(
@@ -110,12 +113,14 @@ class DepartmentControllerTest {
     }
 
     @Test
+//    @WithMockUser(username = "admin@mail.com", roles = {"ROLE_USER", "ROLE_ADMIN"})
     public void findDepartmentByIdNotFoundStatusTest() throws Exception {
         mockMvc.perform(get(DEPARTMENT_ENDPOINT + "/1")).andDo(print()).andExpect(status().isNotFound());
     }
 
 
     @Test
+//    @WithMockUser(username = "admin@mail.com", roles = {"ROLE_ADMIN"})
     public void updateDepartmentByIdSuccessTest() throws Exception {
         Department oldDepartment =
                 departmentRepository.save(Department.builder().title("hr").build());
@@ -132,6 +137,7 @@ class DepartmentControllerTest {
     }
 
     @Test
+//    @WithMockUser(username = "admin@mail.com", roles = {"ROLE_ADMIN"})
     public void updateDepartmentByIdNotFoundStatusTest() throws Exception {
         mockMvc
                 .perform(
@@ -142,6 +148,7 @@ class DepartmentControllerTest {
     }
 
     @Test
+//    @WithMockUser(username = "admin@mail.com", roles = {"ROLE_ADMIN"})
     public void deleteDepartmentByIdSuccessTest() throws Exception {
         Department department =
                 departmentRepository.save(Department.builder().title("java-department").build());
@@ -162,6 +169,7 @@ class DepartmentControllerTest {
 
 
     @Test
+//    @WithMockUser(username = "admin@mail.com", roles = {"ROLE_ADMIN"})
     public void getListOfDepartmentsSuccessTest() throws Exception {
         List<Department> departmentList =
                 Arrays.asList(
