@@ -2,18 +2,17 @@ package org.example.facade;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.ProjectDTO;
 import org.example.dto.ProjectPositionDTO;
-import org.example.entity.Project;
-import org.example.entity.ProjectPosition;;
+import org.example.entity.ProjectPosition;
 import org.example.modelmapper.ProjectPositionMapper;
 import org.example.service.ProjectPositionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+;
 
 
 @RequiredArgsConstructor
@@ -26,10 +25,10 @@ public class ProjectPositionFacade {
 
     @Transactional
     public ProjectPositionDTO save(ProjectPositionDTO projectPositionDTO) {
-            ProjectPosition savedProjectPosition = projectPositionService.save(mapper.toEntity(projectPositionDTO));
-            ProjectPositionDTO savedProjectPositionDTO = mapper.toDto(savedProjectPosition);
-            return savedProjectPositionDTO;
-        }
+        ProjectPosition savedProjectPosition = projectPositionService.save(mapper.toEntity(projectPositionDTO));
+        ProjectPositionDTO savedProjectPositionDTO = mapper.toDto(savedProjectPosition);
+        return savedProjectPositionDTO;
+    }
 
     public ProjectPositionDTO findById(Integer id) {
         return mapper.toDto(projectPositionService.findById(id));
@@ -53,6 +52,24 @@ public class ProjectPositionFacade {
     @Transactional
     public void deleteById(Integer id) {
         projectPositionService.deleteById(id);
+    }
+
+    @Transactional
+    public List<ProjectPositionDTO> findAllAvailableNow(){
+        List<ProjectPosition> allAvailableNow = projectPositionService.findAllAvailableNow();
+        return allAvailableNow
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ProjectPositionDTO> findAllAvailableNext(int days){
+        List<ProjectPosition> allAvailableNext = projectPositionService.findAllAvailableNext(days);
+        return allAvailableNext
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
     }
 }
 

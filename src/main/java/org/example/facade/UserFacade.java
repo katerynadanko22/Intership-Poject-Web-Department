@@ -8,6 +8,7 @@ import org.example.entity.User;
 import org.example.modelmapper.UserMapper;
 import org.example.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ public class UserFacade {
     private final UserService userService;
     private final UserMapper mapper;
 
+    @Transactional
     public UserDTO save(UserDTORegistration userDTORegistration) {
         User savedUser = userService.save(mapper.registrationToEntity(userDTORegistration));
         UserDTORegistration savedUserDTORegistration = mapper.entityToRegistration(savedUser);
@@ -37,11 +39,13 @@ public class UserFacade {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public UserDTO update(Integer id, UserDTO dto) {
         User updated = userService.update(id, mapper.toEntity(dto));
         return mapper.toDto(updated);
     }
 
+    @Transactional
     public void deleteById(Integer id) {
         userService.deleteById(id);
     }

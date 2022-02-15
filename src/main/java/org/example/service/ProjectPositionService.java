@@ -2,9 +2,7 @@ package org.example.service;
 
 import org.example.entity.ProjectPosition;
 
-
 import java.util.List;
-import java.util.Optional;
 
 public interface ProjectPositionService {
 
@@ -17,5 +15,9 @@ public interface ProjectPositionService {
     ProjectPosition update(Integer id, ProjectPosition updatedProjectPosition);
 
     void deleteById(Integer id);
+
+    List<ProjectPosition> findAllAvailableNow();
+
+    List<ProjectPosition>  findAllAvailableNext(int days);
 
 }

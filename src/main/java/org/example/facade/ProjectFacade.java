@@ -45,7 +45,7 @@ public class ProjectFacade {
 
     @Transactional
     public void deleteById(Integer id) {
-            projectService.deleteById(id);
+        projectService.deleteById(id);
     }
 }
 

@@ -4,7 +4,6 @@ package org.example.service;
 import org.example.entity.Department;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DepartmentService {
     Department save(Department department);

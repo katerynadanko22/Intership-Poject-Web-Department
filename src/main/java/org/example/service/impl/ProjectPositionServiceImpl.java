@@ -19,40 +19,54 @@ public class ProjectPositionServiceImpl implements ProjectPositionService {
 
     @Override
     public ProjectPosition save(ProjectPosition projectPosition) {
-        log.info(String.format("projectPosition.save {id = %d, project = %s}",
-                projectPosition.getId(), projectPosition.getProject()));
+        log.info("projectPosition start to save with id{} ", projectPosition.getId());
         return projectPositionRepository.save(projectPosition);
     }
 
     @Override
     public List<ProjectPosition> findAll() {
-        log.info("projectPosition.getAll: " + projectPositionRepository.findAll());
+        log.info("projectPosition start to get All");
         return projectPositionRepository.findAll();
     }
 
     @Override
     public ProjectPosition findById(Integer id) {
-        return projectPositionRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such project position in BD"));
+        log.info("projectPosition start to get by id {} ", id);
+        return projectPositionRepository.findById(id).orElseThrow(() -> new NoSuchElementException("No such project position in BD"));
     }
 
     @Override
-    public ProjectPosition update(Integer id, ProjectPosition updatedProjectPosition) {
-
-        ProjectPosition projectPosition = projectPositionRepository.findById(id).orElseThrow(()->
+    public ProjectPosition update(Integer id, ProjectPosition positionNew) {
+        log.info("projectPosition start to update  by id {} ", id);
+        ProjectPosition projectPosition = projectPositionRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("No such project position in BD"));
-        projectPosition.setProject(updatedProjectPosition.getProject());
-        projectPosition.setUser(updatedProjectPosition.getUser());
-        projectPosition.setPositionTitle(updatedProjectPosition.getPositionTitle());
-        projectPosition.setPositionStartDate(updatedProjectPosition.getPositionStartDate());
-        projectPosition.setPositionEndDate(updatedProjectPosition.getPositionEndDate());
+        projectPosition.setProject(positionNew.getProject());
+        projectPosition.setUser(positionNew.getUser());
+        projectPosition.setPositionTitle(positionNew.getPositionTitle());
+        projectPosition.setPositionStartDate(positionNew.getPositionStartDate());
+        projectPosition.setPositionEndDate(positionNew.getPositionEndDate());
 
         return projectPositionRepository.save(projectPosition);
     }
 
     @Override
     public void deleteById(Integer id) {
-        if (projectPositionRepository.findById(id).isPresent()) {
-        projectPositionRepository.deleteById(id);
+        log.info("projectPosition start to delete  by id {} ", id);
+        if (projectPositionRepository.existsById(id)) {
+            projectPositionRepository.deleteById(id);
         }
     }
+    @Override
+    public List<ProjectPosition> findAllAvailableNow(){
+        return projectPositionRepository.findAllAvailableNow();
+    }
+    @Override
+    public List<ProjectPosition>findAllAvailableNext(int days){
+       return projectPositionRepository.findAllAvailableNext(days);
+    }
 }
+
+
+
+
+
