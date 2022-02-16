@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
@@ -30,10 +33,4 @@ public class Project {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    public Project(Integer id, String title, LocalDate startDate, LocalDate endDate) {
-        this.id = id;
-        this.title = title;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
 }

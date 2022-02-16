@@ -45,7 +45,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('read','write')")
     @PostMapping(value = "/{departmentId}")
     private UserDTO registerUser(@RequestBody UserDTORegistration userDTORegistration,
-                         @PathVariable("departmentId") Integer departmentId) {
+                                 @PathVariable("departmentId") Integer departmentId) {
 
         userDTORegistration.setDepartment(departmentFacade.findById(departmentId));
         return userFacade.registerUser(userDTORegistration);
@@ -54,7 +54,7 @@ public class UserController {
     @PostMapping("/reset-password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Reset password of employee")
-    public void resetPassword(@ApiParam(name = "Reset password request", value = "Contains username, old and new password of employee")
+    public void resetPassword(@ApiParam(name = "Reset password request", value = "Contains email, old and new password of employee")
                               @RequestBody
                               @Valid ResetPassword request, BindingResult result) {
         log.info("executing resetPassword() method");
@@ -63,8 +63,6 @@ public class UserController {
         }
         userFacade.resetPassword(request);
     }
-
-
 
     @ApiOperation(value = "Get specific User in the System ", response = UserDTO.class, tags = "getUser")
     @PreAuthorize("hasAuthority('read')")
@@ -78,7 +76,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 401, message = "not authorized!"),
             @ApiResponse(code = 403, message = "forbidden!!!"),
-            @ApiResponse(code = 404, message = "not found!!!") })
+            @ApiResponse(code = 404, message = "not found!!!")})
 
     @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/")

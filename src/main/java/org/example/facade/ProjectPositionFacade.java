@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-;
-
-
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -54,22 +51,5 @@ public class ProjectPositionFacade {
         projectPositionService.deleteById(id);
     }
 
-    @Transactional
-    public List<ProjectPositionDTO> findAllAvailableNow(){
-        List<ProjectPosition> allAvailableNow = projectPositionService.findAllAvailableNow();
-        return allAvailableNow
-                .stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public List<ProjectPositionDTO> findAllAvailableNext(int days){
-        List<ProjectPosition> allAvailableNext = projectPositionService.findAllAvailableNext(days);
-        return allAvailableNext
-                .stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
-    }
 }
 

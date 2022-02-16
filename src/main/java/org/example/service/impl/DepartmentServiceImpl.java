@@ -1,6 +1,5 @@
 package org.example.service.impl;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.Department;

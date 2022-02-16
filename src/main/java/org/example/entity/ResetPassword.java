@@ -1,13 +1,12 @@
 package org.example.entity;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import javax.persistence.Column;
 
 @Api(value = "ResetPassword", description = "REST Apis related to ResetPassword Entity")
 @AllArgsConstructor
@@ -15,12 +14,12 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @Data
 public class ResetPassword {
-    @NotBlank
+    @Column(nullable = false)
     private String email;
 
-    @NotBlank
+    @Column(nullable = false)
     private String passwordOld;
 
-    @NotBlank
+    @Column(nullable = false)
     private String passwordNew;
 }

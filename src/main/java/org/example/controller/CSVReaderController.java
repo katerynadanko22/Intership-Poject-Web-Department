@@ -9,7 +9,6 @@ import org.example.dto.UserDTORegistration;
 import org.example.facade.CSVReaderFacade;
 import org.example.service.CSVReaderService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,18 +19,16 @@ import java.util.List;
 
 @Api(value = "Read users from CSV file", description = "REST Apis related to User Entity")
 @RequiredArgsConstructor
-@Slf4j
 @RestController
 @RequestMapping("api/users/upload")
 public class CSVReaderController {
 
-//    private final CSVReaderFacade csvReaderFacade;
-    private final CSVReaderService csvReaderService;
+    private final CSVReaderFacade csvReaderFacade;
 
     @ApiOperation(value = "Read users from CSV file", response = UserCSV.class, tags = "users List From CSV")
     @PreAuthorize("hasAnyAuthority('read')")
     @PostMapping(value = "/csv")
     private List<UserCSV> readUsersFromCSV(@RequestParam("file") MultipartFile file) {
-        return csvReaderService.readFromCsv(file);
+        return csvReaderFacade.readFromCsv(file);
     }
 }

@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
         log.error("user already exist with id{} ", user.getId());
         return userRepository.save(user);
     }
+
     @Override
     @Transactional
     public List<User> registerAll(List<User> users) {
@@ -59,14 +60,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(resetPassword.getPasswordNew()));
         return user;
     }
-
-
-
-
-
-
-
-
 
 
     @Override

@@ -42,11 +42,6 @@ public class UserFacade {
         return mapper.entityToRegistration(userService.resetPassword(resetPassword));
     }
 
-
-
-
-
-
     public UserDTO findById(Integer id) {
         return mapper.toDto(userService.findById(id));
     }

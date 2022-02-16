@@ -56,14 +56,6 @@ public class ProjectPositionServiceImpl implements ProjectPositionService {
             projectPositionRepository.deleteById(id);
         }
     }
-    @Override
-    public List<ProjectPosition> findAllAvailableNow(){
-        return projectPositionRepository.findAllAvailableNow();
-    }
-    @Override
-    public List<ProjectPosition>findAllAvailableNext(int days){
-       return projectPositionRepository.findAllAvailableNext(days);
-    }
 }
 
 

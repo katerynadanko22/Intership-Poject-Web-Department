@@ -20,7 +20,7 @@ import java.util.List;
 public class CSVReaderServiceImpl implements CSVReaderService {
 
     @Override
-    public List<UserCSV> readFromCsv( MultipartFile file) {
+    public List<UserCSV> readFromCsv(MultipartFile file) {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             CsvToBean<UserCSV> csvToBean =
                     new CsvToBeanBuilder(reader)

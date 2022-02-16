@@ -6,9 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dto.DepartmentDTO;
-import org.example.dto.UserDTORegistration;
 
-import javax.validation.constraints.NotBlank;
+import javax.persistence.Column;
 
 @ApiModel(value = "Registration entity", description = "Contains fields for registration of employee")
 @Data
@@ -16,38 +15,28 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 public class RegistrationEntity {
-    @NotBlank
+    @Column(nullable = false)
     private String firstName;
 
-    @NotBlank
+    @Column(nullable = false)
     private String lastName;
 
-    @NotBlank
+    @Column(nullable = false)
     private String email;
 
-    @NotBlank
+    @Column(nullable = false)
     private String password;
 
-    @NotBlank
+    @Column(nullable = false)
     private String jobTitle;
 
-    @NotBlank
+    @Column(nullable = false)
     private Role role;
 
-    @NotBlank
+    @Column(nullable = false)
     private Status status;
 
-    @NotBlank
+    @Column(nullable = false)
     private DepartmentDTO department;
 
-    public RegistrationEntity toDTO() {
-        return RegistrationEntity.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .password(password)
-                .role(role)
-                .jobTitle(jobTitle)
-                .email(email)
-                .build();
-    }
 }

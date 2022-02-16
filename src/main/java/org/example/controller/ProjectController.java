@@ -20,14 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 @Api(value = "Swagger2DemoRestController", description = "REST Apis related to Project Entity")
 @RequiredArgsConstructor
-@Slf4j
 @RestController
 @RequestMapping("api/projects")
 public class ProjectController {
 
     private final ProjectFacade projectFacade;
+
     @ApiOperation(value = "Save new Project in the System ", response = ProjectDTO.class, tags = "saveProject")
     @PostMapping(value = "/")
     @PreAuthorize("hasAnyAuthority('read','write')")
@@ -41,7 +42,7 @@ public class ProjectController {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 401, message = "Not authorized!"),
             @ApiResponse(code = 403, message = "Forbidden!!!"),
-            @ApiResponse(code = 404, message = "Not found!!!") })
+            @ApiResponse(code = 404, message = "Not found!!!")})
     @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/")
     private List<ProjectDTO> getAll() {

@@ -1,10 +1,8 @@
 package org.example.unit;
 
- import org.example.entity.ProjectPosition;
- import org.example.exception.DuplicateEntityException;
- import org.example.repository.ProjectPositionRepository;
- import org.example.service.impl.ProjectPositionServiceImpl;
-import org.junit.jupiter.api.Assertions;
+import org.example.entity.ProjectPosition;
+import org.example.repository.ProjectPositionRepository;
+import org.example.service.impl.ProjectPositionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -90,9 +88,7 @@ import static org.mockito.Mockito.when;
         }
 
         @Test
-        public void whenGivenIdForUpdate_shouldThrowException_ifIProjectPositionDoesntExist() {
+        public void whenGivenIdForUpdate_shouldThrowException_ifProjectPositionDoesntExist() {
             assertThrows(NoSuchElementException.class, () -> projectPositionService.update(50, new ProjectPosition()));
         }
-
     }
-

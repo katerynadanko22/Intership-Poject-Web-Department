@@ -116,4 +116,5 @@ public class UserTest {
         assertThrows(NoSuchElementException.class, () -> userServiceMock.update(50, new User()));
     }
 
+
 }
