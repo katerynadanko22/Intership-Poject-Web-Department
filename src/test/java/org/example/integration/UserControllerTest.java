@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,8 +50,8 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     public static final String USER_ENDPOINT = "/api/users/";
-    public static final String TEST_ENTITY = "{\"firstName\":\"Kate\",\"lastName\":\"Danko\",\"email\":\"kate\"" +
-            "\"password\":\"user\", \"jobTitle\":\"junior\",\"status\":\"ACTIVE\",\"role\":\"ROLE_USER\", \"department\":\"229\"}";
+    public static final String TEST_ENTITY = "{\"firstName\":\"Kate\",\"lastName\":\"Danko\",\"email\":\"kate\"," +
+            "\"password\":\"user\", \"jobTitle\":\"junior\",\"status\":\"ACTIVE\",\"role\":\"ROLE_USER\"}";
 
     @BeforeEach
     public void setup() {
@@ -65,21 +66,21 @@ public class UserControllerTest {
         departmentRepository.deleteAll();
     }
 
-//    @Test
-//    @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
-//    public void registerUserSuccessTest() throws Exception {
-//        Department department = departmentRepository.save(Department.builder().title("Java-dep").build());
-//        mockMvc
-//                .perform(
-//                        post(USER_ENDPOINT + "{departmentId}", department.getId())
-//                                .contentType(MediaType.APPLICATION_JSON)
-//                                .content(TEST_ENTITY)
-//                                .characterEncoding("utf-8"))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.firstName").value("Kate"))
-//                .andExpect(jsonPath("$.id").isNotEmpty());
-//    }
+    @Test
+    @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
+    public void registerUserSuccessTest() throws Exception {
+        Department department = departmentRepository.save(Department.builder().title("Java-dep").build());
+        mockMvc
+                .perform(
+                        post(USER_ENDPOINT + "{departmentId}", department.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TEST_ENTITY)
+                                .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Kate"))
+                .andExpect(jsonPath("$.id").isNotEmpty());
+    }
 
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
@@ -89,7 +90,6 @@ public class UserControllerTest {
                 .jobTitle("junior").status(Status.valueOf("ACTIVE")).role(Role.valueOf("ROLE_USER")).build();
         user.setDepartment(department);
         userRepository.save(user);
-
         mockMvc
                 .perform(
                         post(USER_ENDPOINT + "{departmentId}", department.getId())
@@ -129,36 +129,46 @@ public class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
+    public void updateUserByIdSuccessTest() throws Exception {
+        Department department = departmentRepository.save(Department.builder().title("Java-dep").build());
+        User oldUser =
+                userRepository.save(User.builder()
+                        .firstName("Alex")
+                        .lastName("Danko")
+                        .email("kate")
+                        .password("user")
+                        .jobTitle("junior")
+                        .status(Status.valueOf("ACTIVE"))
+                        .role(Role.valueOf("ROLE_USER"))
+                        .build());
 
-//    @Test
-//    @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
-//    public void updateUserByIdSuccessTest() throws Exception {
-//        Department department = departmentRepository.save(new Department(1, "dev"));
-//        User user = userRepository.save(User.builder()
-//                .firstName("Kate111")
-//                .lastName("Danko")
-//                .email("kate")
-//                .password("user")
-//                .jobTitle("junior")
-//                .status(Status.valueOf("ACTIVE"))
-//                .role(Role.valueOf("ROLE_USER"))
-//                .department(department)
-//                .build());
-//        mockMvc
-//                .perform(
-//                        put(USER_ENDPOINT + "{id}", user.getId())
-//                                .content(TEST_ENTITY)
-//                                .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.firstName")
-//                        .value("Kate"))
-//                .andExpect(status().isOk());
-//    }
+        mockMvc
+                .perform(
+                        put(USER_ENDPOINT + "{id}", oldUser.getId())
+                                .content(TEST_ENTITY)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.firstName").value("Kate"))
+                .andExpect(status().isOk());
+    }
 
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
     public void updateUserByIdClientErrorStatusTest() throws Exception {
+        mockMvc
+                .perform(
+                        put(USER_ENDPOINT + "1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TEST_ENTITY))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
+    public void updateUserDepartmentByIdClientErrorStatusTest() throws Exception {
         mockMvc
                 .perform(
                         put(USER_ENDPOINT + "1")

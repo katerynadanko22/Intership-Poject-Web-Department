@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.UserDTO;
 import org.example.dto.UserDTORegistration;
 import org.example.entity.ResetPassword;
+import org.example.entity.User;
 import org.example.exception.InValidCSVException;
 import org.example.exception.ResourceNotFoundException;
 import org.example.facade.DepartmentFacade;
@@ -19,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -84,9 +86,15 @@ public class UserController {
     @ApiOperation(value = "Update User in the System ", response = UserDTO.class, tags = "updateUser")
     @PreAuthorize("hasAnyAuthority('read','write')")
     @PutMapping("/{id}")
-    private UserDTO update(@PathVariable("id") Integer id, @RequestBody UserDTO dto)
+    private UserDTO update(@RequestBody UserDTO dto, @PathVariable("id") Integer id)
             throws ResourceNotFoundException {
         return userFacade.update(id, dto);
+    }
+    @ApiOperation(value = "Update User Department in the System ", response = UserDTO.class, tags = "updateUserDepartment")
+    @PreAuthorize("hasAnyAuthority('read','write')")
+    @PutMapping("/{newDepartmentId}/{id}")
+    public UserDTO updateDepartment(@PathVariable("newDepartmentId")Integer newDepartmentId,  @PathVariable("id") Integer id) {
+        return userFacade.updateDepartment(newDepartmentId, id);
     }
 
     @ApiOperation(value = "Delete User by id in the System", response = Integer.class, tags = "deleteUser")

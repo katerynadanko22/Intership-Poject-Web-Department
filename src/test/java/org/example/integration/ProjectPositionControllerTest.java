@@ -60,10 +60,6 @@ public class ProjectPositionControllerTest {
     public static final String PROJECT_POSITION_ENDPOINT = "/api/project-positions/";
     public static final String TEST_ENTITY = "{\"positionTitle\":\"test\"," +
             "\"positionStartDate\":\"20-01-2022\", \"positionEndDate\":\"20-02-2022\"}";
-    public static final String PROJECT_ID = "{\"project\":\"1\"}";
-    public static final String PROJECT_ENTITY = "{\"project\":\"1\"}";
-    public static final String USER_ID = "{\"user\":\"1\"}";
-    public static final String USER_ENTITY = "{\"user\":\"1\"}";
 
     @BeforeEach
     public void setup() {
@@ -82,38 +78,35 @@ public class ProjectPositionControllerTest {
         departmentRepository.deleteAll();
     }
 
-//    @Test
-//    @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
-//    public void createProjectPositionSuccessTest() throws Exception {
-//        Project project = projectRepository.save( Project.builder().id(1).title("test-project").startDate(LocalDate.now())
-//                .endDate(LocalDate.now()).build());
-//        User user = userRepository.save(User.builder().firstName("Kate").lastName("Danko").email("kate").password("user")
-//                .jobTitle("junior").status(Status.valueOf("ACTIVE")).role(Role.valueOf("ROLE_USER")).build());
-//        mockMvc
-//                .perform(
-//                        post(PROJECT_POSITION_ENDPOINT  + "{projectId}" +"/{userId}", user.getId(), project.getId())
-//                                .contentType(MediaType.APPLICATION_JSON)
-//                                .content(TEST_ENTITY)
-//                                .accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//
-//                .andExpect(jsonPath("$.positionTitle").value("test"))
-//                .andExpect(jsonPath("$.positionStartDate").value("20-01-2022"))
-//                .andExpect(jsonPath("$.positionEndDate").value("20-02-2022"))
-//                .andExpect(jsonPath("$.project").value(1))
-//                .andExpect(jsonPath("$.user").value(1))
-//                .andExpect(jsonPath("$.id").isNotEmpty());
-//    }
+    @Test
+    @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
+    public void createProjectPositionSuccessTest() throws Exception {
+        Department department = departmentRepository.save(Department.builder().title("test-dep").build());
+        Project project = projectRepository.save( Project.builder().title("test-project").startDate(LocalDate.now())
+                .endDate(LocalDate.now()).build());
+        User user = userRepository.save(User.builder().firstName("Kate").lastName("Danko").email("kate").password("user")
+                .jobTitle("junior").status(Status.valueOf("ACTIVE")).role(Role.valueOf("ROLE_USER"))
+                .department(department).build());
+        mockMvc
+                .perform(
+                        post(PROJECT_POSITION_ENDPOINT  + "{projectId}" +"/{userId}",  project.getId(), user.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TEST_ENTITY)
+                                .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.positionTitle").value("test"))
+                .andExpect(jsonPath("$.positionStartDate").value("20-01-2022"))
+                .andExpect(jsonPath("$.positionEndDate").value("20-02-2022"))
+                .andExpect(jsonPath("$.id").isNotEmpty());
+    }
 
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write"})
     public void createProjectPositionClientErrorStatusTest() throws Exception {
         Project project = projectRepository.save(new Project(1,"test name", LocalDate.now(), LocalDate.now()));
-        Department department = departmentRepository.save(new Department(1, "dev"));
         User user = userRepository.save(new User(1, "TestName", "Danko", "kateryna@mali.com",
-                "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, department));
+                "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(1, "dev")));
         projectPositionRepository.save(ProjectPosition.builder()
                 .positionTitle("test")
                 .positionStartDate(LocalDate.now())
@@ -162,33 +155,34 @@ public class ProjectPositionControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    @WithMockUser(username = "admin@mail.com", authorities = {"write"})
+    public void updateProjectPositionByIdSuccessTest() throws Exception {
+        Department department = departmentRepository.save(Department.builder().title("test-dep").build());
+        Project project = projectRepository.save( Project.builder().title("test-project").startDate(LocalDate.now())
+                .endDate(LocalDate.now()).build());
+        User user = userRepository.save(User.builder().firstName("Kate").lastName("Danko").email("kate").password("user")
+                .jobTitle("junior").status(Status.valueOf("ACTIVE")).role(Role.valueOf("ROLE_USER"))
+                .department(department).build());
 
-//    @Test
-//    @WithMockUser(username = "admin@mail.com", authorities = {"write"})
-//    public void updateProjectPositionByIdSuccessTest() throws Exception {
-//        Project project = projectRepository.save(new Project(1,"test name", LocalDate.now(), LocalDate.now()));
-//        User user = userRepository.save(new User(1, "TestName", "Danko", "kateryna@mali.com",
-//                "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(1, "Java-dep")));
-//
-//        ProjectPosition oldProjectPosition =
-//                projectPositionRepository.save(ProjectPosition.builder()
-//                        .positionTitle("test old")
-//                        .positionStartDate(LocalDate.now())
-//                        .positionEndDate(LocalDate.now())
-//                        .project(project)
-//                        .user(user)
-//                        .build());
-//        mockMvc
-//                .perform(
-//                        put(PROJECT_POSITION_ENDPOINT + "/{id}", oldProjectPosition.getId())
-//                                .content(TEST_ENTITY)
-//                                .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.positionTitle")
-//                        .value("test new"))
-//                .andExpect(status().isOk());
-//    }
+        ProjectPosition oldProjectPosition =
+                projectPositionRepository.save(ProjectPosition.builder()
+                        .positionTitle("test old")
+                        .positionStartDate(LocalDate.now())
+                        .positionEndDate(LocalDate.now())
+                        .project(project)
+                        .user(user)
+                        .build());
+        mockMvc
+                .perform(
+                        put(PROJECT_POSITION_ENDPOINT + "/{id}", oldProjectPosition.getId())
+                                .content(TEST_ENTITY)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(jsonPath("$.positionTitle")
+                        .value("test"))
+                .andExpect(status().isOk());
+    }
 
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write"})

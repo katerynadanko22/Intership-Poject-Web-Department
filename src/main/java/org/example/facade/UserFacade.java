@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,15 +29,6 @@ public class UserFacade {
         UserDTORegistration savedUserDTORegistration = mapper.entityToRegistration(savedUser);
         return mapper.registrationToDto(savedUserDTORegistration);
     }
-
-//    @Transactional
-//    public List<UserDTORegistration> registerAll(List<User> users1) {
-//        List<User> users = userService.registerAll(users1);
-//        return users
-//                .stream()
-//                .map(mapper::entityToRegistration)
-//                .collect(Collectors.toList());
-//    }
 
     @Transactional
     public UserDTORegistration resetPassword(ResetPassword resetPassword) {
@@ -56,7 +49,13 @@ public class UserFacade {
 
     @Transactional
     public UserDTO update(Integer id, UserDTO dto) {
-        User updated = userService.update(id, mapper.toEntity(dto));
+        User updated = userService.update( mapper.toEntity(dto), id);
+        return mapper.toDto(updated);
+    }
+
+    @Transactional
+    public UserDTO updateDepartment(Integer newDepartmentId, Integer id) {
+        User updated = userService.updateDepartment(newDepartmentId, id);
         return mapper.toDto(updated);
     }
 

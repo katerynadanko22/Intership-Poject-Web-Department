@@ -112,7 +112,7 @@ public class UserTest {
         newUser.setDepartment(new Department(1, "dev"));
 
         given(userRepositoryMock.findById(89)).willReturn(Optional.of(user));
-        userServiceMock.update(89, newUser);
+        userServiceMock.update(newUser, 89);
 
         verify(userRepositoryMock).save(user);
         assertEquals("Kate", user.getFirstName());
@@ -120,8 +120,6 @@ public class UserTest {
 
     @Test
     public void whenGivenIdForUpdate_shouldThrowException_ifIdDoesntExist() {
-        assertThrows(NoSuchElementException.class, () -> userServiceMock.update(50, new User()));
+        assertThrows(NoSuchElementException.class, () -> userServiceMock.update(new User(), 50));
     }
-
-
 }

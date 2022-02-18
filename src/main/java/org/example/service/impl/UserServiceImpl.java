@@ -9,7 +9,6 @@ import org.example.exception.InvalidPasswordException;
 import org.example.repository.DepartmentRepository;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
-import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,15 +65,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(Integer id, User userNew) {
+    public User update(User userNew, Integer id) {
         log.info("user start to update  by id {} ", id);
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("No such user in BD"));
         user.setFirstName(userNew.getFirstName());
         user.setLastName(userNew.getLastName());
         user.setJobTitle(userNew.getJobTitle());
-        user.setDepartment(userNew.getDepartment());
         user.setEmail(userNew.getEmail());
-        user.setPassword(passwordEncoder.encode(userNew.getPassword()));
+        return userRepository.save(user);
+    }
+    @Override
+    public User updateDepartment(Integer newDepartmentId, Integer id) {
+        log.info("user start to update Department by id {} ", id);
+        User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("No such user in BD"));
+        user.setDepartment(Optional.of(departmentRepository.findById(newDepartmentId)
+                .orElseThrow(() -> new NoSuchElementException("No such Department in BD"))).get());
         return userRepository.save(user);
     }
 

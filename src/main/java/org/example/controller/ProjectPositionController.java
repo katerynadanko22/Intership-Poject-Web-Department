@@ -29,10 +29,10 @@ public class ProjectPositionController {
 
     @ApiOperation(value = "Save new ProjectPosition in the System ", response = ProjectPositionDTO.class, tags = "saveProjectPosition")
     @PreAuthorize("hasAnyAuthority('read','write')")
-    @PostMapping(value = "/{userId}/{projectId}")
+    @PostMapping(value = "/{projectId}/{userId}")
     private ProjectPositionDTO save(@RequestBody ProjectPositionDTO projectPosition,
-                                    @PathVariable("userId") Integer userId,
-                                    @PathVariable("projectId") Integer projectId) {
+                                    @PathVariable("projectId") Integer projectId,
+                                    @PathVariable("userId") Integer userId){
         return projectPositionFacade.save(projectPosition, projectId, userId);
     }
 
