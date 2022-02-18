@@ -21,8 +21,8 @@ public class ProjectPositionFacade {
     private final ProjectPositionMapper mapper;
 
     @Transactional
-    public ProjectPositionDTO save(ProjectPositionDTO projectPositionDTO) {
-        ProjectPosition savedProjectPosition = projectPositionService.save(mapper.toEntity(projectPositionDTO));
+    public ProjectPositionDTO save(ProjectPositionDTO projectPositionDTO, Integer projectId, Integer userId) {
+        ProjectPosition savedProjectPosition = projectPositionService.save(mapper.toEntity(projectPositionDTO), projectId, userId);
         ProjectPositionDTO savedProjectPositionDTO = mapper.toDto(savedProjectPosition);
         return savedProjectPositionDTO;
     }

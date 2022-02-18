@@ -2,7 +2,6 @@ package org.example.unit;
 
 import org.example.entity.ProjectPosition;
 import org.example.repository.ProjectPositionRepository;
-import org.example.service.AvailableEmployeeService;
 import org.example.service.impl.AvailableEmployeeServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

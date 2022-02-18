@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.UserCSV;
 import org.example.dto.UserDTO;
 import org.example.dto.UserDTORegistration;
-import org.example.entity.RegistrationEntity;
 import org.example.entity.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

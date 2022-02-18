@@ -5,12 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ProjectPositionDTO;
 import org.example.exception.ResourceNotFoundException;
-import org.example.facade.ProjectFacade;
 import org.example.facade.ProjectPositionFacade;
-import org.example.facade.UserFacade;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +26,6 @@ import java.util.List;
 @RequestMapping("api/project-positions")
 public class ProjectPositionController {
     private final ProjectPositionFacade projectPositionFacade;
-    private final UserFacade userFacade;
-    private final ProjectFacade projectFacade;
 
     @ApiOperation(value = "Save new ProjectPosition in the System ", response = ProjectPositionDTO.class, tags = "saveProjectPosition")
     @PreAuthorize("hasAnyAuthority('read','write')")
@@ -38,9 +33,7 @@ public class ProjectPositionController {
     private ProjectPositionDTO save(@RequestBody ProjectPositionDTO projectPosition,
                                     @PathVariable("userId") Integer userId,
                                     @PathVariable("projectId") Integer projectId) {
-        projectPosition.setUser(userFacade.findById(userId));
-        projectPosition.setProject(projectFacade.findById(projectId));
-        return projectPositionFacade.save(projectPosition);
+        return projectPositionFacade.save(projectPosition, projectId, userId);
     }
 
     @ApiOperation(value = "Get specific ProjectPosition in the System ", response = ProjectPositionDTO.class, tags = "geProjectPosition")

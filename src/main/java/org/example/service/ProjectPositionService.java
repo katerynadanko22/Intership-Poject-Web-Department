@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProjectPositionService {
 
-    ProjectPosition save(ProjectPosition projectPosition);
+    ProjectPosition save(ProjectPosition projectPosition, Integer projectId, Integer userId);
 
     List<ProjectPosition> findAll();
 

@@ -38,7 +38,6 @@ import java.util.List;
 public class UserController {
 
     private final UserFacade userFacade;
-    private final DepartmentFacade departmentFacade;
     private static BindingResultParser bindingResultParser;
 
     @ApiOperation(value = "Save new User in the System ", response = UserDTO.class, tags = "saveUser")
@@ -46,9 +45,7 @@ public class UserController {
     @PostMapping(value = "/{departmentId}")
     private UserDTO registerUser(@RequestBody UserDTORegistration userDTORegistration,
                                  @PathVariable("departmentId") Integer departmentId) {
-
-        userDTORegistration.setDepartment(departmentFacade.findById(departmentId));
-        return userFacade.registerUser(userDTORegistration);
+        return userFacade.registerUser(userDTORegistration, departmentId);
     }
 
     @PostMapping("/reset-password")

@@ -1,6 +1,5 @@
 package org.example.entity;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,15 +19,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "departments")
 public class Department {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
-    public Department(Integer id) {
-        this.id = id;
-    }
 }
 

@@ -1,9 +1,6 @@
-package org.example;
+package org.example.unit;
 
 import org.example.entity.Department;
-import org.example.entity.Role;
-import org.example.entity.Status;
-import org.example.entity.User;
 import org.example.exception.DuplicateEntityException;
 import org.example.repository.DepartmentRepository;
 import org.example.service.impl.DepartmentServiceImpl;
@@ -37,7 +34,7 @@ public class DepartmentTest {
 
     @Test
     public void testSaveDepartment() {
-        Department department = new Department(1,"Java Department");
+        Department department = new Department(1, "Java Department");
         when(departmentRepositoryMock.save(department)).thenReturn(department);
         Department savedDepartment = departmentServiceMock.save(department);
         assertEquals("Java Department", savedDepartment.getTitle());
@@ -100,7 +97,7 @@ public class DepartmentTest {
 
     @Test
     public void whenGivenTitle_should_Throw_exception_ifExist() {
-        Department department = new Department(1,"Java Department");
+        Department department = new Department(1, "Java Department");
         when(departmentRepositoryMock.existsByTitle(department.getTitle())).thenReturn(true);
         Assertions.assertThrows(DuplicateEntityException.class, () -> departmentServiceMock.save(department));
         verify(departmentRepositoryMock).existsByTitle(department.getTitle());

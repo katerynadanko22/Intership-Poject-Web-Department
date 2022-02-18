@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.entity.Department;
 import org.example.entity.Role;
 import org.example.entity.Status;
 
@@ -11,6 +12,7 @@ import org.example.entity.Status;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
+
     private Integer id;
     @ApiModelProperty(notes = "First name of the User", name = "First name", required = true, value = "Kate")
     private String firstName;
@@ -25,7 +27,7 @@ public class UserDTO {
     @ApiModelProperty(notes = "status of the User", name = "status", required = true, value = "ACTIVE")
     private Status status;
     @ApiModelProperty(notes = "department of the User", name = "department", required = true, value = "1")
-    private DepartmentDTO department;
+    private Department department;
 
 }
 

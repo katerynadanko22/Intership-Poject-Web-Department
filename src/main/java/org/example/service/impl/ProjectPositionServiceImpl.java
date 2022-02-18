@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.ProjectPosition;
 import org.example.repository.ProjectPositionRepository;
+import org.example.repository.ProjectRepository;
+import org.example.repository.UserRepository;
 import org.example.service.ProjectPositionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -16,10 +19,14 @@ import java.util.NoSuchElementException;
 public class ProjectPositionServiceImpl implements ProjectPositionService {
 
     private final ProjectPositionRepository projectPositionRepository;
+    private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
     @Override
-    public ProjectPosition save(ProjectPosition projectPosition) {
+    public ProjectPosition save(ProjectPosition projectPosition, Integer projectId, Integer userId) {
         log.info("projectPosition start to save with id{} ", projectPosition.getId());
+        projectPosition.setProject(projectRepository.findById(projectId).get());
+        projectPosition.setUser(userRepository.findById(userId).get());
         return projectPositionRepository.save(projectPosition);
     }
 
@@ -31,13 +38,14 @@ public class ProjectPositionServiceImpl implements ProjectPositionService {
 
     @Override
     public ProjectPosition findById(Integer id) {
-        log.info("projectPosition start to get by id {} ", id);
-        return projectPositionRepository.findById(id).orElseThrow(() -> new NoSuchElementException("No such project position in BD"));
+        log.info("projectPosition start to get by id={} ", id);
+        return projectPositionRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("No such project position in BD"));
     }
 
     @Override
     public ProjectPosition update(Integer id, ProjectPosition positionNew) {
-        log.info("projectPosition start to update  by id {} ", id);
+        log.info("projectPosition start to update  by id={} ", id);
         ProjectPosition projectPosition = projectPositionRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("No such project position in BD"));
         projectPosition.setProject(positionNew.getProject());

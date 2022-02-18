@@ -22,20 +22,20 @@ public class UserFacade {
     private final UserMapper mapper;
 
     @Transactional
-    public UserDTO registerUser(UserDTORegistration userDTORegistration) {
-        User savedUser = userService.registerUser(mapper.registrationToEntity(userDTORegistration));
+    public UserDTO registerUser(UserDTORegistration userDTORegistration, Integer departmentId) {
+        User savedUser = userService.registerUser(mapper.registrationToEntity(userDTORegistration), departmentId);
         UserDTORegistration savedUserDTORegistration = mapper.entityToRegistration(savedUser);
         return mapper.registrationToDto(savedUserDTORegistration);
     }
 
-    @Transactional
-    public List<UserDTORegistration> registerAll(List<User> users1) {
-        List<User> users = userService.registerAll(users1);
-        return users
-                .stream()
-                .map(mapper::entityToRegistration)
-                .collect(Collectors.toList());
-    }
+//    @Transactional
+//    public List<UserDTORegistration> registerAll(List<User> users1) {
+//        List<User> users = userService.registerAll(users1);
+//        return users
+//                .stream()
+//                .map(mapper::entityToRegistration)
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional
     public UserDTORegistration resetPassword(ResetPassword resetPassword) {
