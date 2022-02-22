@@ -30,10 +30,10 @@ public class ProjectPosition {
     @Column(name = "position_title", nullable = false)
     private String positionTitle;
 
-    @Column(name = "position_start_date", nullable = false)
+    @Column(name = "position_start_date")
     private LocalDate positionStartDate;
 
-    @Column(name = "position_end_date", nullable = false)
+    @Column(name = "position_end_date")
     private LocalDate positionEndDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -43,4 +43,10 @@ public class ProjectPosition {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id")
     private Project project;
+
+    public ProjectPosition(String positionTitle, User user, Project project) {
+        this.positionTitle = positionTitle;
+        this.user = user;
+        this.project = project;
+    }
 }

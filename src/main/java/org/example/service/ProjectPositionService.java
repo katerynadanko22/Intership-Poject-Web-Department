@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProjectPositionService {
 
-    ProjectPosition save(ProjectPosition projectPosition, Integer projectId, Integer userId);
+    ProjectPosition save(ProjectPosition projectPosition);
 
     List<ProjectPosition> findAll();
 
@@ -15,5 +15,7 @@ public interface ProjectPositionService {
     ProjectPosition update(Integer id, ProjectPosition updatedProjectPosition);
 
     void deleteById(Integer id);
+
+    ProjectPosition updateUserAndProjectInProjectPosition(Integer newProjectId, Integer newUserId, Integer id);
 
 }

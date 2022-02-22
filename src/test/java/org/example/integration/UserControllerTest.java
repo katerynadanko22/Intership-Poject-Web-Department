@@ -1,5 +1,6 @@
 package org.example.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.config.TestConfig;
 import org.example.configuration.WebInitializer;
 import org.example.entity.Department;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,6 +30,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -35,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@PropertySource(value = {"classpath:tests.properties"})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfig.class, WebInitializer.class})
 @WebAppConfiguration
@@ -49,9 +54,10 @@ public class UserControllerTest {
 
     private MockMvc mockMvc;
 
-    public static final String USER_ENDPOINT = "/api/users/";
-    public static final String TEST_ENTITY = "{\"firstName\":\"Kate\",\"lastName\":\"Danko\",\"email\":\"kate\"," +
-            "\"password\":\"user\", \"jobTitle\":\"junior\",\"status\":\"ACTIVE\",\"role\":\"ROLE_USER\"}";
+    @Value("${user.endpoint}")
+    public String USER_ENDPOINT;
+    @Value("${user.test.entity}")
+    public String TEST_ENTITY_USER;
 
     @BeforeEach
     public void setup() {
@@ -69,17 +75,46 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
     public void registerUserSuccessTest() throws Exception {
-        Department department = departmentRepository.save(Department.builder().title("Java-dep").build());
+        ObjectMapper objectMapper = new ObjectMapper();
+        Department department = new Department();
+        department.setTitle("Java-department");
+        departmentRepository.save(department);
+        String valueDepartmentAsString = objectMapper.writeValueAsString(department);
+        Department departmentFromDB = objectMapper.readValue(valueDepartmentAsString, Department.class);
+        User user = new User(null, "Kate", "Danko",
+                "email", "user", "junior", Status.ACTIVE,
+                Role.ROLE_USER, departmentFromDB);
         mockMvc
                 .perform(
-                        post(USER_ENDPOINT + "{departmentId}", department.getId())
+                        post(USER_ENDPOINT)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY)
+                                .content(asJsonString(user))
                                 .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("Kate"))
                 .andExpect(jsonPath("$.id").isNotEmpty());
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            final String jsonContent = mapper.writeValueAsString(obj);
+            return jsonContent;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void createProjectBadRequestErrorStatusTest() throws Exception {
+        mockMvc
+                .perform(
+                        post(USER_ENDPOINT)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("Kate"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -92,9 +127,9 @@ public class UserControllerTest {
         userRepository.save(user);
         mockMvc
                 .perform(
-                        post(USER_ENDPOINT + "{departmentId}", department.getId())
+                        post(USER_ENDPOINT)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY))
+                                .content(TEST_ENTITY_USER))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -132,7 +167,6 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
     public void updateUserByIdSuccessTest() throws Exception {
-        Department department = departmentRepository.save(Department.builder().title("Java-dep").build());
         User oldUser =
                 userRepository.save(User.builder()
                         .firstName("Alex")
@@ -147,7 +181,7 @@ public class UserControllerTest {
         mockMvc
                 .perform(
                         put(USER_ENDPOINT + "{id}", oldUser.getId())
-                                .content(TEST_ENTITY)
+                                .content(TEST_ENTITY_USER)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -162,19 +196,35 @@ public class UserControllerTest {
                 .perform(
                         put(USER_ENDPOINT + "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY))
+                                .content(TEST_ENTITY_USER))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
     public void updateUserDepartmentByIdClientErrorStatusTest() throws Exception {
+        Department oldDepartment = departmentRepository.save(Department.builder().title("Java-script-dep").build());
+        User oldUser =
+                userRepository.save(User.builder()
+                        .firstName("Alex")
+                        .lastName("Danko")
+                        .email("kate")
+                        .password("user")
+                        .jobTitle("junior")
+                        .status(Status.valueOf("ACTIVE"))
+                        .role(Role.valueOf("ROLE_USER"))
+                        .department(oldDepartment)
+                        .build());
+        Department newDepartment = departmentRepository.save(Department.builder().title("Java-dep").build());
         mockMvc
                 .perform(
-                        put(USER_ENDPOINT + "1")
+                        patch(USER_ENDPOINT + "{depId}" + "/{id}", newDepartment.getId(), oldUser.getId())
+                                .content(TEST_ENTITY_USER)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY))
-                .andExpect(status().is4xxClientError());
+                                .characterEncoding("UTF-8"))
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test

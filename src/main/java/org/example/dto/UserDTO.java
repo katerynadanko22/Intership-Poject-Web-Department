@@ -27,7 +27,7 @@ public class UserDTO {
     @ApiModelProperty(notes = "status of the User", name = "status", required = true, value = "ACTIVE")
     private Status status;
     @ApiModelProperty(notes = "department of the User", name = "department", required = true, value = "1")
-    private Department department;
+    private DepartmentDTO department;
 
 }
 

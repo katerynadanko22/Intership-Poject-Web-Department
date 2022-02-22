@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService {
 
-    User registerUser(User user, Integer departmentId);
+    User registerUser(User user);
 
     User resetPassword(ResetPassword resetPassword);
 

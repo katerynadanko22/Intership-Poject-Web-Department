@@ -19,14 +19,12 @@ import java.util.Optional;
 public class ProjectPositionServiceImpl implements ProjectPositionService {
 
     private final ProjectPositionRepository projectPositionRepository;
-    private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public ProjectPosition save(ProjectPosition projectPosition, Integer projectId, Integer userId) {
+    public ProjectPosition save(ProjectPosition projectPosition) {
         log.info("projectPosition start to save with id{} ", projectPosition.getId());
-        projectPosition.setProject(projectRepository.findById(projectId).get());
-        projectPosition.setUser(userRepository.findById(userId).get());
         return projectPositionRepository.save(projectPosition);
     }
 
@@ -54,6 +52,18 @@ public class ProjectPositionServiceImpl implements ProjectPositionService {
         projectPosition.setPositionStartDate(positionNew.getPositionStartDate());
         projectPosition.setPositionEndDate(positionNew.getPositionEndDate());
 
+        return projectPositionRepository.save(projectPosition);
+    }
+
+    @Override
+    public ProjectPosition updateUserAndProjectInProjectPosition(Integer newProjectId, Integer newUserId, Integer id) {
+        log.info("ProjectPosition start to update User and Project by id {} ", id);
+        ProjectPosition projectPosition = projectPositionRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("No ProjectPosition in BD with id {}" + id));
+        projectPosition.setProject(Optional.of(projectRepository.findById(newProjectId)
+                .orElseThrow(() -> new NoSuchElementException("No such project in BD with id {}" + newProjectId))).get());
+        projectPosition.setUser(Optional.of(userRepository.findById(newUserId)
+                .orElseThrow(() -> new NoSuchElementException("No user in BD with id {}" + newUserId))).get());
         return projectPositionRepository.save(projectPosition);
     }
 

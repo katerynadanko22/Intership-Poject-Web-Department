@@ -20,7 +20,7 @@ import java.util.List;
 @Api(value = "Read users from CSV file", description = "REST Apis related to User Entity")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/users/upload")
+@RequestMapping("api/users")
 public class CSVReaderController {
 
     private final CSVReaderFacade csvReaderFacade;

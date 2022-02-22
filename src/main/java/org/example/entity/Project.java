@@ -27,10 +27,10 @@ public class Project {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     private LocalDate startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     private LocalDate endDate;
 
 }

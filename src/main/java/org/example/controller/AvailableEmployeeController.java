@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ProjectPositionDTO;
 import org.example.facade.AvailableEmployeeFacade;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +32,8 @@ public class AvailableEmployeeController {
             @ApiResponse(code = 404, message = "not found!!!")})
     @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/available-now")
-    private List<ProjectPositionDTO> findAllAvailableNow() {
-        return availableEmployeeFacade.findAllAvailableNow();
+    private List<ProjectPositionDTO> findAllAvailableProjectPositionsNow() {
+        return availableEmployeeFacade.findAllAvailableProjectPositionsNow();
     }
 
     @ApiOperation(value = "Get list of ProjectPositions with Users Available Next assigned days in the System ", response = Iterable.class, tags = "findAllAvailableNext")
@@ -45,7 +44,7 @@ public class AvailableEmployeeController {
             @ApiResponse(code = 404, message = "not found!!!")})
     @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/available-next/{days}")
-    private List<ProjectPositionDTO> findAllAvailableNext(@PathVariable("days") int days) {
-        return availableEmployeeFacade.findAllAvailableNext(days);
+    private List<ProjectPositionDTO> findAllAvailableProjectPositionsNext(@PathVariable("days") int days) {
+        return availableEmployeeFacade.findAllAvailableProjectPositionsNext(days);
     }
 }

@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.UserDTO;
 import org.example.dto.UserDTORegistration;
+import org.example.entity.Department;
 import org.example.entity.ResetPassword;
 import org.example.entity.User;
 import org.example.modelmapper.UserMapper;
+import org.example.repository.DepartmentRepository;
 import org.example.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +24,21 @@ import java.util.stream.Collectors;
 public class UserFacade {
     private final UserService userService;
     private final UserMapper mapper;
+    private final DepartmentRepository departmentRepository;
 
     @Transactional
-    public UserDTO registerUser(UserDTORegistration userDTORegistration, Integer departmentId) {
-        User savedUser = userService.registerUser(mapper.registrationToEntity(userDTORegistration), departmentId);
+    public UserDTO registerUser(UserDTORegistration userDTORegistration) {
+        User user = mapper.registrationToEntity(userDTORegistration);
+
+        Integer departmentId = userDTORegistration.getDepartment().getId();
+        Department department = Optional.ofNullable(departmentRepository.getOne(departmentId)).orElseThrow(() -> new NoSuchElementException("No department in DB with id {}" + departmentId));
+
+        user.setDepartment(department);
+
+        User savedUser = userService.registerUser(user);
         UserDTORegistration savedUserDTORegistration = mapper.entityToRegistration(savedUser);
-        return mapper.registrationToDto(savedUserDTORegistration);
+        UserDTO userDTO = mapper.registrationToDto(savedUserDTORegistration);
+        return userDTO;
     }
 
     @Transactional
@@ -49,7 +60,7 @@ public class UserFacade {
 
     @Transactional
     public UserDTO update(Integer id, UserDTO dto) {
-        User updated = userService.update( mapper.toEntity(dto), id);
+        User updated = userService.update(mapper.toEntity(dto), id);
         return mapper.toDto(updated);
     }
 

@@ -6,11 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.entity.Department;
 import org.example.entity.Role;
 import org.example.entity.Status;
-
-import javax.validation.constraints.NotBlank;
 
 @ApiModel(value = " User Registration entity", description = "Contains fields for registration of employee")
 @Data
@@ -35,7 +32,7 @@ public class UserDTORegistration {
     @ApiModelProperty(notes = "status of the User", name = "status", required = true, value = "ACTIVE")
     private Status status;
     @ApiModelProperty(notes = "department of the User", name = "department", required = true, value = "1")
-    private Department department;
+    private DepartmentDTO department;
 
 
 }

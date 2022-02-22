@@ -14,7 +14,7 @@ public class FileItemImpl implements FileItem {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream(){
         return getClass().getClassLoader().getResourceAsStream(path);
     }
 
@@ -44,7 +44,7 @@ public class FileItemImpl implements FileItem {
     }
 
     @Override
-    public String getString(String s) throws UnsupportedEncodingException {
+    public String getString(String s) {
         return null;
     }
 
@@ -54,7 +54,7 @@ public class FileItemImpl implements FileItem {
     }
 
     @Override
-    public void write(File file) throws Exception {
+    public void write(File file) {
 
     }
 
@@ -84,7 +84,7 @@ public class FileItemImpl implements FileItem {
     }
 
     @Override
-    public OutputStream getOutputStream() throws IOException {
+    public OutputStream getOutputStream() {
         return null;
     }
 

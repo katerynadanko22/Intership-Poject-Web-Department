@@ -20,10 +20,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project save(Project project) {
         log.info("project start to save with id{} ", project.getId());
-        if (projectRepository.existsByTitle(project.getTitle())) {
-            throw new DuplicateEntityException("Department already exist");
-        }
         log.error("project already exist with id{} ", project.getId());
+        if (projectRepository.existsByTitle(project.getTitle())) {
+            throw new DuplicateEntityException("Project with title {} already exist" + project.getId());
+        }
         return projectRepository.save(project);
     }
 

@@ -1,5 +1,7 @@
 package org.example.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.config.TestConfig;
 import org.example.configuration.WebInitializer;
 import org.example.entity.Department;
@@ -17,6 +19,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -39,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@PropertySource(value = {"classpath:tests.properties"})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfig.class, WebInitializer.class})
 @WebAppConfiguration
@@ -56,10 +61,12 @@ public class ProjectPositionControllerTest {
     private DepartmentRepository departmentRepository;
 
     private MockMvc mockMvc;
-
-    public static final String PROJECT_POSITION_ENDPOINT = "/api/project-positions/";
-    public static final String TEST_ENTITY = "{\"positionTitle\":\"test\"," +
-            "\"positionStartDate\":\"20-01-2022\", \"positionEndDate\":\"20-02-2022\"}";
+    @Value("${project.position.endpoint}")
+    public String PROJECT_POSITION_ENDPOINT;
+    @Value("${project.position.test.entity}")
+    public String TEST_ENTITY_PROJECT_POSITION;
+    @Value("${project.position.test.name}")
+    public String TEST_NAME_PROJECT_POSITION;
 
     @BeforeEach
     public void setup() {
@@ -81,44 +88,62 @@ public class ProjectPositionControllerTest {
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
     public void createProjectPositionSuccessTest() throws Exception {
-        Department department = departmentRepository.save(Department.builder().title("test-dep").build());
-        Project project = projectRepository.save( Project.builder().title("test-project").startDate(LocalDate.now())
-                .endDate(LocalDate.now()).build());
-        User user = userRepository.save(User.builder().firstName("Kate").lastName("Danko").email("kate").password("user")
-                .jobTitle("junior").status(Status.valueOf("ACTIVE")).role(Role.valueOf("ROLE_USER"))
-                .department(department).build());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        objectMapper.registerModule(new JavaTimeModule());
+
+        Project project = new Project();
+        project.setTitle("Java project");
+        projectRepository.save(project);
+        String valueProjectAsString = objectMapper.writeValueAsString(project);
+        Project projectFromDB = objectMapper.readValue(valueProjectAsString, Project.class);
+
+        Department department = new Department();
+        department.setTitle("Java-department");
+        departmentRepository.save(department);
+        User user = new User();
+        user.setFirstName("test");
+        user.setLastName("test");
+        user.setEmail("test");
+        user.setPassword("test");
+        user.setJobTitle("test");
+        user.setStatus(Status.ACTIVE);
+        user.setRole(Role.ROLE_USER);
+        user.setDepartment(department);
+        userRepository.save(user);
+        String valueUserAsString = objectMapper.writeValueAsString(user);
+        User userFromDB = objectMapper.readValue(valueUserAsString, User.class);
+        ProjectPosition projectPosition = new ProjectPosition( "Java-developer",
+                userFromDB, projectFromDB);
         mockMvc
                 .perform(
-                        post(PROJECT_POSITION_ENDPOINT  + "{projectId}" +"/{userId}",  project.getId(), user.getId())
+                        post(PROJECT_POSITION_ENDPOINT)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY)
+                                .content(asJsonString(projectPosition))
                                 .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.positionTitle").value("test"))
-                .andExpect(jsonPath("$.positionStartDate").value("20-01-2022"))
-                .andExpect(jsonPath("$.positionEndDate").value("20-02-2022"))
+                .andExpect(jsonPath("$.positionTitle").value("Java-developer"))
                 .andExpect(jsonPath("$.id").isNotEmpty());
     }
-
+    public static String asJsonString(final Object obj) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            final String jsonContent = mapper.writeValueAsString(obj);
+            return jsonContent;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write"})
     public void createProjectPositionClientErrorStatusTest() throws Exception {
-        Project project = projectRepository.save(new Project(1,"test name", LocalDate.now(), LocalDate.now()));
-        User user = userRepository.save(new User(1, "TestName", "Danko", "kateryna@mali.com",
-                "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(1, "dev")));
-        projectPositionRepository.save(ProjectPosition.builder()
-                .positionTitle("test")
-                .positionStartDate(LocalDate.now())
-                .positionEndDate(LocalDate.now())
-                .project(project)
-                .user(user)
-                .build());
         mockMvc
                 .perform(
                         post(PROJECT_POSITION_ENDPOINT + "/")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY))
+                                .content(TEST_ENTITY_PROJECT_POSITION))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -148,6 +173,18 @@ public class ProjectPositionControllerTest {
     }
 
     @Test
+    public void createProjectPositionBadRequestErrorStatusTest() throws Exception {
+        mockMvc
+                .perform(
+                        post(PROJECT_POSITION_ENDPOINT)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("title"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write"})
     public void findProjectPositionByIdNotFoundStatusTest() throws Exception {
         mockMvc.perform(get(PROJECT_POSITION_ENDPOINT + "/1"))
@@ -158,29 +195,18 @@ public class ProjectPositionControllerTest {
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write"})
     public void updateProjectPositionByIdSuccessTest() throws Exception {
-        Department department = departmentRepository.save(Department.builder().title("test-dep").build());
-        Project project = projectRepository.save( Project.builder().title("test-project").startDate(LocalDate.now())
-                .endDate(LocalDate.now()).build());
-        User user = userRepository.save(User.builder().firstName("Kate").lastName("Danko").email("kate").password("user")
-                .jobTitle("junior").status(Status.valueOf("ACTIVE")).role(Role.valueOf("ROLE_USER"))
-                .department(department).build());
 
         ProjectPosition oldProjectPosition =
                 projectPositionRepository.save(ProjectPosition.builder()
                         .positionTitle("test old")
-                        .positionStartDate(LocalDate.now())
-                        .positionEndDate(LocalDate.now())
-                        .project(project)
-                        .user(user)
                         .build());
         mockMvc
                 .perform(
                         put(PROJECT_POSITION_ENDPOINT + "/{id}", oldProjectPosition.getId())
-                                .content(TEST_ENTITY)
+                                .content(TEST_NAME_PROJECT_POSITION)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(jsonPath("$.positionTitle")
-                        .value("test"))
+                .andExpect(jsonPath("$.positionTitle").value("test"))
                 .andExpect(status().isOk());
     }
 
@@ -191,7 +217,7 @@ public class ProjectPositionControllerTest {
                 .perform(
                         put(PROJECT_POSITION_ENDPOINT + "/1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY))
+                                .content(TEST_ENTITY_PROJECT_POSITION))
                 .andExpect(status().isNotFound());
     }
 

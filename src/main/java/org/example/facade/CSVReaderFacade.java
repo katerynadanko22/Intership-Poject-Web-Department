@@ -2,8 +2,6 @@ package org.example.facade;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dto.UserCSV;
-import org.example.modelmapper.UserMapper;
-import org.example.repository.UserRepository;
 import org.example.service.CSVReaderService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

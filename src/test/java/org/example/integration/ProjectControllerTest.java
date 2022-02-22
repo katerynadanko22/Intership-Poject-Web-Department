@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@PropertySource(value = {"classpath:tests.properties"})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfig.class, WebInitializer.class})
 @WebAppConfiguration
@@ -45,10 +47,13 @@ public class ProjectControllerTest {
 
     private MockMvc mockMvc;
 
-    public static final String PROJECT_ENDPOINT = "/api/projects/";
-    public static final String TEST_ENTITY = "{\"title\":\"test-project\", \"startDate\":\"20-01-2022\", " +
-            "\"endDate\":\"20-02-2022\"}";
-    public static final String TEST_NAME = "{\"title\":\"test-project\"}";
+    @Value("${project.endpoint}")
+    public String PROJECT_ENDPOINT;
+    @Value("${project.test.entity}")
+    public String TEST_ENTITY_PROJECT;
+    @Value("${project.test.name}")
+    public String TEST_NAME;
+
 
     @BeforeEach
     public void setup() {
@@ -69,7 +74,7 @@ public class ProjectControllerTest {
                 .perform(
                         post(PROJECT_ENDPOINT)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY)
+                                .content(TEST_ENTITY_PROJECT)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -87,7 +92,7 @@ public class ProjectControllerTest {
                 .perform(
                         post(PROJECT_ENDPOINT)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_NAME))
+                                .content("title"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -95,11 +100,12 @@ public class ProjectControllerTest {
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"read", "write"})
     public void createProjectClientErrorStatusTest() throws Exception {
+        Project project = projectRepository.save(Project.builder().title("bad name").build());
         mockMvc
                 .perform(
-                        post(PROJECT_ENDPOINT)
-                                .contentType(TEST_ENTITY)
-                                .content(TEST_ENTITY))
+                        post(PROJECT_ENDPOINT + "{id}", project.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TEST_NAME))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -138,7 +144,7 @@ public class ProjectControllerTest {
         mockMvc
                 .perform(
                         put(PROJECT_ENDPOINT + "{id}", oldProject.getId())
-                                .content(TEST_ENTITY)
+                                .content(TEST_ENTITY_PROJECT)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -153,7 +159,7 @@ public class ProjectControllerTest {
                 .perform(
                         put(PROJECT_ENDPOINT + "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY))
+                                .content(TEST_ENTITY_PROJECT))
                 .andExpect(status().isNotFound());
     }
 

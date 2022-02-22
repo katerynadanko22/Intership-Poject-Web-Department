@@ -28,43 +28,43 @@ import static org.mockito.Mockito.when;
 public class ProjectTest {
 
     @InjectMocks
-    private ProjectServiceImpl projectService;
+    private ProjectServiceImpl projectServiceMock;
 
     @Mock
-    private ProjectRepository projectRepository;
+    private ProjectRepository projectRepositoryMock;
 
     @Test
     public void whenSaveProject_shouldReturnProject() {
 
         Project project = new Project();
-        when(projectRepository.save(ArgumentMatchers.any(Project.class))).thenReturn(project);
-        Project created = projectService.save(project);
+        when(projectRepositoryMock.save(ArgumentMatchers.any(Project.class))).thenReturn(project);
+        Project created = projectServiceMock.save(project);
         assertThat(created.getTitle()).isSameAs(project.getTitle());
-        verify(projectRepository).save(project);
+        verify(projectRepositoryMock).save(project);
     }
 
     @Test
     public void whenGivenProject_shouldSave_ButThrowException_ifProjectExist() {
         Project project = new Project();
-        when(projectRepository.existsByTitle(project.getTitle())).thenReturn(true);
-        Assertions.assertThrows(DuplicateEntityException.class, () -> projectService.save(project));
-        verify(projectRepository).existsByTitle(project.getTitle());
+        when(projectRepositoryMock.existsByTitle(project.getTitle())).thenReturn(true);
+        Assertions.assertThrows(DuplicateEntityException.class, () -> projectServiceMock.save(project));
+        verify(projectRepositoryMock).existsByTitle(project.getTitle());
     }
 
     @Test
     public void shouldReturnAllProjects() {
         List<Project> projects = new ArrayList<>();
         projects.add(new Project());
-        when(projectRepository.findAll()).thenReturn(projects);
-        List<Project> users2 = projectService.findAll();
+        when(projectRepositoryMock.findAll()).thenReturn(projects);
+        List<Project> users2 = projectServiceMock.findAll();
         assertThat(projects.equals(users2));
     }
 
     @Test
     public void shouldReturnEmptyList() {
         List<Project> projects = new ArrayList<>();
-        when(projectRepository.findAll()).thenReturn(projects);
-        List<Project> users2 = projectService.findAll();
+        when(projectRepositoryMock.findAll()).thenReturn(projects);
+        List<Project> users2 = projectServiceMock.findAll();
         assertThat(users2.isEmpty());
     }
 
@@ -73,13 +73,13 @@ public class ProjectTest {
         Integer id = 1;
         Project project = new Project();
         project.setId(id);
-        when(projectRepository.findById(id)).thenReturn(Optional.of(project));
-        assertThat(project.equals(projectRepository.findById(id)));
+        when(projectRepositoryMock.findById(id)).thenReturn(Optional.of(project));
+        assertThat(project.equals(projectRepositoryMock.findById(id)));
     }
 
     @Test
     public void whenGivenId_shouldThrowException_ifProjectDoesntExist() {
-        assertThrows(NoSuchElementException.class, () -> projectService.findById(50));
+        assertThrows(NoSuchElementException.class, () -> projectServiceMock.findById(50));
     }
 
     @Test
@@ -90,16 +90,30 @@ public class ProjectTest {
         Project newProject = new Project();
         newProject.setTitle("Test");
 
-        given(projectRepository.findById(89)).willReturn(Optional.of(project));
-        projectService.update(89, newProject);
+        given(projectRepositoryMock.findById(89)).willReturn(Optional.of(project));
+        projectServiceMock.update(89, newProject);
 
-        verify(projectRepository).save(project);
+        verify(projectRepositoryMock).save(project);
         assertEquals("Test", project.getTitle());
     }
 
     @Test
     public void whenGivenIdForUpdate_shouldThrowException_ifIProjectDoesntExist() {
-        assertThrows(NoSuchElementException.class, () -> projectService.update(50, new Project()));
+        assertThrows(NoSuchElementException.class, () -> projectServiceMock.update(50, new Project()));
     }
 
+    @Test
+    public void whenGivenIdDeleteProject_ifFound() {
+        Project project = new Project();
+        project.setId(25);
+        projectServiceMock.deleteById(25);
+        assertThat(project.equals(null));
+    }
+
+    @Test
+    public void whenGivenIdDelete_ifProjectDoesntExist() {
+        projectServiceMock.deleteById(25);
+        assertThrows(NoSuchElementException.class,
+                () -> projectServiceMock.findById(25));
+    }
 }

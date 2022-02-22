@@ -1,5 +1,6 @@
 package org.example.integration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.example.config.TestConfig;
 import org.example.configuration.WebInitializer;
 import org.example.entity.Department;
@@ -42,11 +43,17 @@ class DepartmentControllerTest {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    public static final String DEPARTMENT_ENDPOINT = "/api/departments/";
-    public static final String TEST_ENTITY = "{\"title\":\"java-department\"}";
-    public static final String TEST_ID = "{\"id\":\"1\"}";
+    @Value("${department.endpoint}")
+    public String DEPARTMENT_ENDPOINT;
+
+    @Value("${department.test.entity}")
+    public String TEST_ENTITY_DEPARTMENT;
+
+    @Value("${department.test.id}")
+    public String TEST_ID;
 
     private MockMvc mockMvc;
+
     @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -65,7 +72,7 @@ class DepartmentControllerTest {
                 .perform(
                         post(DEPARTMENT_ENDPOINT)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY))
+                                .content(TEST_ENTITY_DEPARTMENT))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -83,18 +90,6 @@ class DepartmentControllerTest {
                                 .content(TEST_ID))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @WithMockUser(username = "admin@mail.com", authorities = {"read","write"})
-    public void createDepartmentInternalServerErrorStatusTest() throws Exception {
-        mockMvc
-                .perform(
-                        post(DEPARTMENT_ENDPOINT)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -126,7 +121,7 @@ class DepartmentControllerTest {
         mockMvc
                 .perform(
                         put(DEPARTMENT_ENDPOINT + "{id}", oldDepartment.getId())
-                                .content(TEST_ENTITY)
+                                .content(TEST_ENTITY_DEPARTMENT)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -141,7 +136,7 @@ class DepartmentControllerTest {
                 .perform(
                         put(DEPARTMENT_ENDPOINT + "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(TEST_ENTITY))
+                                .content(TEST_ENTITY_DEPARTMENT))
                 .andExpect(status().isNotFound());
     }
 

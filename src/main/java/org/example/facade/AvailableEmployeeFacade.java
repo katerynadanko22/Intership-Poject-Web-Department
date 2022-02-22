@@ -18,18 +18,18 @@ public class AvailableEmployeeFacade {
     private final ProjectPositionMapper mapper;
 
     @Transactional
-    public List<ProjectPositionDTO> findAllAvailableNow() {
-        List<ProjectPosition> allAvailableNow = availableEmployeeService.findAllAvailableNow();
-        return allAvailableNow
+    public List<ProjectPositionDTO> findAllAvailableProjectPositionsNow() {
+        List<ProjectPosition> allAvailableProjectPositionsNow = availableEmployeeService.findAllAvailableNow();
+        return allAvailableProjectPositionsNow
                 .stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public List<ProjectPositionDTO> findAllAvailableNext(int days) {
-        List<ProjectPosition> allAvailableNext = availableEmployeeService.findAllAvailableNext(days);
-        return allAvailableNext
+    public List<ProjectPositionDTO> findAllAvailableProjectPositionsNext(int days) {
+        List<ProjectPosition> allAvailableProjectPositionsNext = availableEmployeeService.findAllAvailableNext(days);
+        return allAvailableProjectPositionsNext
                 .stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());

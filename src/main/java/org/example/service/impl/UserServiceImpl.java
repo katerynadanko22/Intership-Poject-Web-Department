@@ -27,14 +27,13 @@ public class UserServiceImpl implements UserService {
     private final DepartmentRepository departmentRepository;
 
     @Override
-    public User registerUser(User user, Integer departmentId) {
+    public User registerUser(User user) {
         log.info("user start to save with id={} ", user.getId());
-        if (userRepository.existsUserByEmail(user.getEmail())) {
-            throw new DuplicateEntityException("User already exist");
-        }
         log.error("user already exist with id={} ", user.getId());
+        if (userRepository.existsUserByEmail(user.getEmail())) {
+            throw new DuplicateEntityException("User with id={} already exist" + user.getId());
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setDepartment(departmentRepository.findById(departmentId).get());
         return userRepository.save(user);
     }
 

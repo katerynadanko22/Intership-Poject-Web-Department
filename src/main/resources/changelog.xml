@@ -27,10 +27,8 @@
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="start_date" type="date">
-                <constraints nullable="false"/>
             </column>
             <column name="end_date" type="date">
-                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -77,10 +75,8 @@
                 <constraints nullable="false"/>
             </column>
             <column name="position_start_date" type="date">
-                <constraints nullable="false"/>
             </column>
             <column name="position_end_date" type="date">
-                <constraints nullable="false"/>
             </column>
             <column name="user_id" type="int">
                 <constraints foreignKeyName="fk_project_position_user" references="users(id)"/>

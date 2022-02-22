@@ -44,10 +44,9 @@ public class UserController {
 
     @ApiOperation(value = "Save new User in the System ", response = UserDTO.class, tags = "saveUser")
     @PreAuthorize("hasAnyAuthority('read','write')")
-    @PostMapping(value = "/{departmentId}")
-    private UserDTO registerUser(@RequestBody UserDTORegistration userDTORegistration,
-                                 @PathVariable("departmentId") Integer departmentId) {
-        return userFacade.registerUser(userDTORegistration, departmentId);
+    @PostMapping(value = "/")
+    private UserDTO registerUser(@RequestBody UserDTORegistration userDTORegistration) {
+        return userFacade.registerUser(userDTORegistration);
     }
 
     @PostMapping("/reset-password")
@@ -92,7 +91,7 @@ public class UserController {
     }
     @ApiOperation(value = "Update User Department in the System ", response = UserDTO.class, tags = "updateUserDepartment")
     @PreAuthorize("hasAnyAuthority('read','write')")
-    @PutMapping("/{newDepartmentId}/{id}")
+    @PatchMapping("/{newDepartmentId}/{id}")
     public UserDTO updateDepartment(@PathVariable("newDepartmentId")Integer newDepartmentId,  @PathVariable("id") Integer id) {
         return userFacade.updateDepartment(newDepartmentId, id);
     }
