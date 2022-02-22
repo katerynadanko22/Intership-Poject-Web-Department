@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -45,7 +47,7 @@ public class User {
     private Role role;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "department", nullable = false)
+    @JoinColumn(name = "department")
     private Department department;
 
 }

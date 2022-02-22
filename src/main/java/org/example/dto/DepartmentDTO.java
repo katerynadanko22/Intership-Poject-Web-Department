@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DepartmentDTO {
-    private Integer id;
-    @ApiModelProperty(notes = "Title of the Department",name="Title",required=true, value="Java Department")
-    private String title;
 
-    public DepartmentDTO(Integer id) {
-        this.id = id;
-    }
+    private Integer id;
+    @ApiModelProperty(notes = "Title of the Department", name="Title",required=true, value="Java Department")
+    private String title;
 }

@@ -14,7 +14,6 @@ public class DepartmentMapper {
 
     private final ModelMapper mapper;
 
-
     public Department toEntity(DepartmentDTO dto) {
         return Objects.isNull(dto) ? null : mapper.map(dto, Department.class);
     }

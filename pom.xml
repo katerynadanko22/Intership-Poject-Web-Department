@@ -93,8 +93,8 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <version>${spring.security.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
+<!--            <type>pom</type>-->
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -336,10 +336,16 @@
             <version>${opencsv.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.supercsv</groupId>
-            <artifactId>super-csv</artifactId>
-            <version>2.4.0</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.9.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.13.1</version>
+        </dependency>
+
 
 
     </dependencies>

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.exception.DuplicateEntityException;
 import org.example.exception.EmptyInputException;
 import org.example.exception.ResourceNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,5 +36,9 @@ public class EntityExceptionController {
     @ExceptionHandler(DuplicateEntityException.class)
     public ResponseEntity<String> handleDuplicateUserException(DuplicateEntityException e) {
         return new ResponseEntity<String>("User already exist!", HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDuplicateUserException(DataIntegrityViolationException e) {
+        return new ResponseEntity<String>("BAD_REQUEST!", HttpStatus.BAD_REQUEST);
     }
 }

@@ -5,6 +5,7 @@ import org.example.entity.Role;
 import org.example.entity.Status;
 import org.example.entity.User;
 import org.example.exception.DuplicateEntityException;
+import org.example.repository.DepartmentRepository;
 import org.example.repository.UserRepository;
 import org.example.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -38,14 +39,19 @@ public class UserTest {
     private UserRepository userRepositoryMock;
 
     @Mock
+    private DepartmentRepository departmentRepositoryMock;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Test
-    public void whenSaveUser_shouldReturnUser() {
-        User user = new User(10, "TestName", "Danko", "kateryna@mali.com",
-                "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(1, "dev"));
+    public void whenRegisterUser_shouldReturnUser() {
+        Department department = new Department(1, "Test department");
+        User user = new User(1, "TestName", "Danko", "kateryna@mail.com",
+                "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, department);
+
         when(userRepositoryMock.save(ArgumentMatchers.any(User.class))).thenReturn(user);
-        User created = userServiceMock.save(user);
+        User created = userServiceMock.registerUser(user);
         assertThat(created.getFirstName()).isSameAs(user.getFirstName());
         verify(userRepositoryMock).save(user);
     }
@@ -55,7 +61,7 @@ public class UserTest {
         User user = new User(1, "TestName", "Danko", "kateryna@mail.com",
                 "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(1, "dev"));
         when(userRepositoryMock.existsUserByEmail(user.getEmail())).thenReturn(true);
-        Assertions.assertThrows(DuplicateEntityException.class, () -> userServiceMock.save(user));
+        Assertions.assertThrows(DuplicateEntityException.class, () -> userServiceMock.registerUser(user));
         verify(userRepositoryMock).existsUserByEmail(user.getEmail());
     }
 
@@ -100,20 +106,50 @@ public class UserTest {
         newUser.setFirstName("Kate");
         newUser.setLastName("New Test Name");
         newUser.setEmail("New Test Name");
-        newUser.setPassword(passwordEncoder.encode("New Test Name"));
+        newUser.setPassword("New Test Name");
         newUser.setJobTitle("New Test Name");
-        newUser.setDepartment(new Department(1, "dev"));
 
         given(userRepositoryMock.findById(89)).willReturn(Optional.of(user));
-        userServiceMock.update(89, newUser);
+        userServiceMock.update(newUser, 89);
 
         verify(userRepositoryMock).save(user);
         assertEquals("Kate", user.getFirstName());
     }
-
     @Test
     public void whenGivenIdForUpdate_shouldThrowException_ifIdDoesntExist() {
-        assertThrows(NoSuchElementException.class, () -> userServiceMock.update(50, new User()));
+        assertThrows(NoSuchElementException.class, () -> userServiceMock.update(new User(), 50));
     }
 
+    @Test
+    public void whenGivenId_shouldUpdateUsersDepartment_ifFound() {
+        User user = new User(10, "Test", "Danko", "kateryna@mali.com",
+                "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(2, "java"));
+        Department department = new Department(15, "dev");
+
+        given(departmentRepositoryMock.findById(15)).willReturn(Optional.of(department));
+        given(userRepositoryMock.findById(10)).willReturn(Optional.of(user));
+        userServiceMock.updateDepartment(15, 10);
+
+        verify(userRepositoryMock).save(user);
+        assertEquals(15, user.getDepartment().getId());
+    }
+
+    @Test
+    public void whenGivenIdForUpdateDepartment_shouldThrowException_ifIdDoesntExist() {
+        assertThrows(NoSuchElementException.class, () -> userServiceMock.updateDepartment(1, 50));
+    }
+    @Test
+    public void whenGivenIdDeleteUser_ifFound() {
+        User user = new User();
+        user.setId(25);
+        userServiceMock.deleteById(25);
+        assertThat(user.equals(null));
+    }
+
+    @Test
+    public void whenGivenIdDelete_ifUserDoesntExist() {
+        userServiceMock.deleteById(25);
+        assertThrows(NoSuchElementException.class,
+                () -> userServiceMock.findById(25));
+    }
 }

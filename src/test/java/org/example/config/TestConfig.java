@@ -25,7 +25,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource(value = {"classpath:application.properties"})
+@PropertySource(value = {"classpath:application.properties", "classpath:tests.properties"})
 @ComponentScan(value = {"org.example"})
 public class TestConfig {
 

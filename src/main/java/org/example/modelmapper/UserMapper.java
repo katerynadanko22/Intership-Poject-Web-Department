@@ -27,6 +27,7 @@ public class UserMapper {
     public User registrationToEntity(UserDTORegistration userDTORegistration) {
         return Objects.isNull(userDTORegistration) ? null : mapper.map(userDTORegistration, User.class);
     }
+
     public UserDTORegistration entityToRegistration(User entity) {
         return Objects.isNull(entity) ? null : mapper.map(entity, UserDTORegistration.class);
     }
@@ -34,6 +35,7 @@ public class UserMapper {
     public UserDTO registrationToDto(UserDTORegistration registration) {
         return Objects.isNull(registration) ? null : mapper.map(registration, UserDTO.class);
     }
+
     public UserDTORegistration dtoToRegistration(UserDTO userDTO) {
         return Objects.isNull(userDTO) ? null : mapper.map(userDTO, UserDTORegistration.class);
     }
