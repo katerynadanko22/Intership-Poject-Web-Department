@@ -16,8 +16,6 @@ public interface ProjectPositionService {
 
     void deleteById(Integer id);
 
-    List<ProjectPosition> findAllAvailableNow();
-
-    List<ProjectPosition>  findAllAvailableNext(int days);
+    ProjectPosition updateUserAndProjectInProjectPosition(Integer newProjectId, Integer newUserId, Integer id);
 
 }

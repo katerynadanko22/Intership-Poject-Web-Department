@@ -22,7 +22,6 @@ import java.util.List;
 
 @Api(value = "Swagger2DemoRestController", description = "REST Apis related to Department Entity")
 @RequiredArgsConstructor
-@Slf4j
 @RestController
 @RequestMapping("api/departments")
 public class DepartmentController {
@@ -48,7 +47,7 @@ public class DepartmentController {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 401, message = "not authorized!"),
             @ApiResponse(code = 403, message = "forbidden!!!"),
-            @ApiResponse(code = 404, message = "not found!!!") })
+            @ApiResponse(code = 404, message = "not found!!!")})
 
     @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/")

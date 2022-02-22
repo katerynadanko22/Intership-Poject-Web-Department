@@ -1,5 +1,6 @@
 package org.example.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,11 +9,13 @@ import lombok.NoArgsConstructor;
 import org.example.entity.Role;
 import org.example.entity.Status;
 
+@ApiModel(value = " User Registration entity", description = "Contains fields for registration of employee")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class UserDTORegistration {
+
     private Integer id;
     @ApiModelProperty(notes = "First name of the User", name = "First name", required = true, value = "Kate")
     private String firstName;
@@ -30,6 +33,7 @@ public class UserDTORegistration {
     private Status status;
     @ApiModelProperty(notes = "department of the User", name = "department", required = true, value = "1")
     private DepartmentDTO department;
+
 
 }
 
