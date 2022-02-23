@@ -49,6 +49,8 @@ public class ProjectControllerTest {
 
     @Value("${project.endpoint}")
     public String PROJECT_ENDPOINT;
+    @Value("${project.endpoint.wrong}")
+    public String PROJECT_ENDPOINT_WRONG;
     @Value("${project.test.entity}")
     public String TEST_ENTITY_PROJECT;
     @Value("${project.test.name}")
@@ -128,7 +130,7 @@ public class ProjectControllerTest {
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"read"})
     public void findProjectByIdNotFoundStatusTest() throws Exception {
-        mockMvc.perform(get(PROJECT_ENDPOINT + "1"))
+        mockMvc.perform(get(PROJECT_ENDPOINT_WRONG))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }

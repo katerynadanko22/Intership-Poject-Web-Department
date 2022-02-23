@@ -11,11 +11,11 @@ public interface ProjectPositionRepository extends JpaRepository<ProjectPosition
     @Query(nativeQuery = true, value =
             "SELECT * FROM project_positions " +
                     "WHERE position_end_date < current_date OR position_start_date > current_date")
-    List<ProjectPosition> findAllAvailableNow();
+    List<ProjectPosition> findAllAvailableProjectPositionsNow();
 
     @Query(nativeQuery = true, value =
             "SELECT * FROM project_positions " +
                     "WHERE position_start_date < current_date and position_end_date < current_date " +
                     "or position_start_date > current_date + ?1 and position_end_date > current_date + ?1")
-    List<ProjectPosition> findAllAvailableNext(int days);
+    List<ProjectPosition> findAllAvailableProjectPositionsNextDays(int days);
 }

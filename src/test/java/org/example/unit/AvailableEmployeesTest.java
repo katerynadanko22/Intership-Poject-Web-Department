@@ -2,7 +2,7 @@ package org.example.unit;
 
 import org.example.entity.ProjectPosition;
 import org.example.repository.ProjectPositionRepository;
-import org.example.service.impl.AvailableEmployeeServiceImpl;
+import org.example.service.impl.AvailableProjectPositionsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class AvailableEmployeesTest {
 
     @InjectMocks
-    private AvailableEmployeeServiceImpl availableEmployeeService;
+    private AvailableProjectPositionsServiceImpl availableEmployeeService;
 
     @Mock
     private ProjectPositionRepository projectPositionRepository;
@@ -28,16 +28,16 @@ public class AvailableEmployeesTest {
     public void shouldReturnAvailableNowEmployees_ifFound() {
         List<ProjectPosition> projectPositions = new ArrayList<>();
         projectPositions.add(new ProjectPosition());
-        when(projectPositionRepository.findAllAvailableNow()).thenReturn(projectPositions);
-        List<ProjectPosition> projectPositions1 = availableEmployeeService.findAllAvailableNow();
+        when(projectPositionRepository.findAllAvailableProjectPositionsNow()).thenReturn(projectPositions);
+        List<ProjectPosition> projectPositions1 = availableEmployeeService.findAllAvailableProjectPositionsNow();
         assertThat(projectPositions.equals(projectPositions1));
     }
 
     @Test
     public void shouldReturnEmptyList_AvailableNowEmployees_ifDoesntExist() {
         List<ProjectPosition> projectPositions = new ArrayList<>();
-        when(projectPositionRepository.findAllAvailableNow()).thenReturn(projectPositions);
-        List<ProjectPosition> projectPositions1 = availableEmployeeService.findAllAvailableNow();
+        when(projectPositionRepository.findAllAvailableProjectPositionsNow()).thenReturn(projectPositions);
+        List<ProjectPosition> projectPositions1 = availableEmployeeService.findAllAvailableProjectPositionsNow();
         assertThat(projectPositions1.isEmpty());
     }
 
@@ -45,16 +45,16 @@ public class AvailableEmployeesTest {
     public void shouldReturnAvailableNextEmployees_ifFound() {
         List<ProjectPosition> projectPositions = new ArrayList<>();
         projectPositions.add(new ProjectPosition());
-        when(projectPositionRepository.findAllAvailableNext(5)).thenReturn(projectPositions);
-        List<ProjectPosition> projectPositions1 = availableEmployeeService.findAllAvailableNext(5);
+        when(projectPositionRepository.findAllAvailableProjectPositionsNextDays(5)).thenReturn(projectPositions);
+        List<ProjectPosition> projectPositions1 = availableEmployeeService.findAllAvailableProjectPositionsNextDays(5);
         assertThat(projectPositions.equals(projectPositions1));
     }
 
     @Test
     public void shouldReturnEmptyList_AvailableNextEmployees_ifDoesntExist() {
         List<ProjectPosition> projectPositions = new ArrayList<>();
-        when(projectPositionRepository.findAllAvailableNext(5)).thenReturn(projectPositions);
-        List<ProjectPosition> projectPositions1 = availableEmployeeService.findAllAvailableNext(5);
+        when(projectPositionRepository.findAllAvailableProjectPositionsNextDays(5)).thenReturn(projectPositions);
+        List<ProjectPosition> projectPositions1 = availableEmployeeService.findAllAvailableProjectPositionsNextDays(5);
         assertThat(projectPositions1.isEmpty());
     }
 }

@@ -111,7 +111,7 @@ public class ProjectPositionTest {
     public void whenGivenId_shouldUpdateUserAndProjectInProjectPosition_ifFound() {
         ProjectPosition projectPosition = new ProjectPosition();
         projectPosition.setId(25);
-        User user = new User(5, "Test", "Danko", "kateryna@mali.com",
+        User user = new User(5, "Kate", "Danko", "kateryna@mali.com",
                 "katekate", "Jun", Status.ACTIVE, Role.ROLE_ADMIN, new Department(2, "java"));
         Project project = new Project();
         project.setId(3);

@@ -56,6 +56,8 @@ public class UserControllerTest {
 
     @Value("${user.endpoint}")
     public String USER_ENDPOINT;
+    @Value("${user.endpoint.wrong}")
+    public String USER_ENDPOINT_WRONG;
     @Value("${user.test.entity}")
     public String TEST_ENTITY_USER;
 
@@ -159,7 +161,7 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
     public void findUserByIdNotFoundStatusTest() throws Exception {
-        mockMvc.perform(get(USER_ENDPOINT + "1"))
+        mockMvc.perform(get(USER_ENDPOINT_WRONG))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }

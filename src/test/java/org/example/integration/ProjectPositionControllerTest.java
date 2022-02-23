@@ -63,6 +63,8 @@ public class ProjectPositionControllerTest {
     private MockMvc mockMvc;
     @Value("${project.position.endpoint}")
     public String PROJECT_POSITION_ENDPOINT;
+    @Value("${project.position.endpoint.wrong}")
+    public String PROJECT_POSITION_ENDPOINT_WRONG;
     @Value("${project.position.test.entity}")
     public String TEST_ENTITY_PROJECT_POSITION;
     @Value("${project.position.test.name}")
@@ -89,8 +91,6 @@ public class ProjectPositionControllerTest {
     @WithMockUser(username = "admin@mail.com", authorities = {"write", "read"})
     public void createProjectPositionSuccessTest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
         objectMapper.registerModule(new JavaTimeModule());
 
         Project project = new Project();
@@ -215,7 +215,7 @@ public class ProjectPositionControllerTest {
     public void updateProjectPositionByIdNotFoundStatusTest() throws Exception {
         mockMvc
                 .perform(
-                        put(PROJECT_POSITION_ENDPOINT + "/1")
+                        put(PROJECT_POSITION_ENDPOINT_WRONG)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(TEST_ENTITY_PROJECT_POSITION))
                 .andExpect(status().isNotFound());

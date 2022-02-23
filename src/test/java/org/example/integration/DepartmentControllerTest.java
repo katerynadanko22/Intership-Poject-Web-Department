@@ -35,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfig.class, WebInitializer.class})
 @WebAppConfiguration
-
 class DepartmentControllerTest {
 
     @Autowired
@@ -45,7 +44,8 @@ class DepartmentControllerTest {
 
     @Value("${department.endpoint}")
     public String DEPARTMENT_ENDPOINT;
-
+    @Value("${department.endpoint.wrong}")
+    public String DEPARTMENT_ENDPOINT_WRONG;
     @Value("${department.test.entity}")
     public String TEST_ENTITY_DEPARTMENT;
 
@@ -66,7 +66,7 @@ class DepartmentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@mail.com", authorities = {"read","write"})
+    @WithMockUser(username = "admin@mail.com", authorities = {"read", "write"})
     public void createDepartmentSuccessTest() throws Exception {
         mockMvc
                 .perform(
@@ -109,12 +109,15 @@ class DepartmentControllerTest {
     @Test
     @WithMockUser(username = "admin@mail.com", authorities = "read")
     public void findDepartmentByIdNotFoundStatusTest() throws Exception {
-        mockMvc.perform(get(DEPARTMENT_ENDPOINT + "1")).andDo(print()).andExpect(status().isNotFound());
+        mockMvc.perform(get(DEPARTMENT_ENDPOINT_WRONG))
+                .andDo(print())
+                .andExpect(status()
+                        .isNotFound());
     }
 
 
     @Test
-    @WithMockUser(username = "admin@mail.com", authorities = {"read","write"})
+    @WithMockUser(username = "admin@mail.com", authorities = {"read", "write"})
     public void updateDepartmentByIdSuccessTest() throws Exception {
         Department oldDepartment =
                 departmentRepository.save(Department.builder().title("hr").build());
@@ -130,18 +133,18 @@ class DepartmentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@mail.com", authorities = {"read","write"})
+    @WithMockUser(username = "admin@mail.com", authorities = {"read", "write"})
     public void updateDepartmentByIdNotFoundStatusTest() throws Exception {
         mockMvc
                 .perform(
-                        put(DEPARTMENT_ENDPOINT + "1")
+                        put(DEPARTMENT_ENDPOINT_WRONG)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(TEST_ENTITY_DEPARTMENT))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(username = "admin@mail.com", authorities = {"read","write"})
+    @WithMockUser(username = "admin@mail.com", authorities = {"read", "write"})
     public void deleteDepartmentByIdSuccessTest() throws Exception {
         Department department =
                 departmentRepository.save(Department.builder().title("java-department").build());
@@ -152,13 +155,14 @@ class DepartmentControllerTest {
                 .andExpect(status().isOk());
     }
 
-//    @Test
-//    public void deleteDepartmentByIdNotFoundStatusTest() throws Exception {
-//        mockMvc
-//                .perform(delete(DEPARTMENT_ENDPOINT + "100").contentType(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isNotFound());
-//    }
+    @Test
+    public void deleteDepartmentByIdNotFoundStatusTest() throws Exception {
+        mockMvc
+                .perform(delete(DEPARTMENT_ENDPOINT_WRONG)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 
 
     @Test

@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ProjectPositionDTO;
-import org.example.facade.AvailableEmployeeFacade;
+import org.example.facade.AvailableProjectPositionsFacade;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(value = "Swagger2 RestController", description = "REST Apis related to Available Employees")
+@Api(value = "Swagger2 RestController", description = "REST Apis related to Available ProjectPositions")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("api/project-positions")
-public class AvailableEmployeeController {
-    private final AvailableEmployeeFacade availableEmployeeFacade;
+public class AvailableProjectPositionsController {
+    private final AvailableProjectPositionsFacade availableProjectPositionsFacade;
 
     @ApiOperation(value = "Get list of ProjectPositions with Users Available Now in the System ", response = Iterable.class, tags = "findAllAvailableNow")
     @ApiResponses(value = {
@@ -33,7 +33,7 @@ public class AvailableEmployeeController {
     @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/available-now")
     private List<ProjectPositionDTO> findAllAvailableProjectPositionsNow() {
-        return availableEmployeeFacade.findAllAvailableProjectPositionsNow();
+        return availableProjectPositionsFacade.findAllAvailableProjectPositionsNow();
     }
 
     @ApiOperation(value = "Get list of ProjectPositions with Users Available Next assigned days in the System ", response = Iterable.class, tags = "findAllAvailableNext")
@@ -45,6 +45,6 @@ public class AvailableEmployeeController {
     @PreAuthorize("hasAuthority('read')")
     @GetMapping(value = "/available-next/{days}")
     private List<ProjectPositionDTO> findAllAvailableProjectPositionsNext(@PathVariable("days") int days) {
-        return availableEmployeeFacade.findAllAvailableProjectPositionsNext(days);
+        return availableProjectPositionsFacade.findAllAvailableProjectPositionsNext(days);
     }
 }

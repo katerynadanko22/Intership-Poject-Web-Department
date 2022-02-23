@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.ProjectPositionDTO;
 import org.example.entity.ProjectPosition;
 import org.example.modelmapper.ProjectPositionMapper;
-import org.example.service.AvailableEmployeeService;
+import org.example.service.AvailableProjectPositionsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AvailableEmployeeFacade {
-    private final AvailableEmployeeService availableEmployeeService;
+public class AvailableProjectPositionsFacade {
+    private final AvailableProjectPositionsService availableProjectPositionsService;
     private final ProjectPositionMapper mapper;
 
     @Transactional
     public List<ProjectPositionDTO> findAllAvailableProjectPositionsNow() {
-        List<ProjectPosition> allAvailableProjectPositionsNow = availableEmployeeService.findAllAvailableNow();
+        List<ProjectPosition> allAvailableProjectPositionsNow = availableProjectPositionsService.findAllAvailableProjectPositionsNow();
         return allAvailableProjectPositionsNow
                 .stream()
                 .map(mapper::toDto)
@@ -28,7 +28,7 @@ public class AvailableEmployeeFacade {
 
     @Transactional
     public List<ProjectPositionDTO> findAllAvailableProjectPositionsNext(int days) {
-        List<ProjectPosition> allAvailableProjectPositionsNext = availableEmployeeService.findAllAvailableNext(days);
+        List<ProjectPosition> allAvailableProjectPositionsNext = availableProjectPositionsService.findAllAvailableProjectPositionsNextDays(days);
         return allAvailableProjectPositionsNext
                 .stream()
                 .map(mapper::toDto)
