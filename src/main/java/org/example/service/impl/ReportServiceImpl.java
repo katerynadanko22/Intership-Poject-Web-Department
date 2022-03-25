@@ -65,9 +65,9 @@ public class ReportServiceImpl implements ReportService {
                 .stream()
                 .map(ProjectPosition::getUser)
                 .collect(Collectors.toList());
-
         for (int i = 0; i < availableUsers.size(); i++) {
             User user = availableUsers.get(i);
+
             Row row = sheet.createRow(i + 1);
 
             Cell firstName = row.createCell(0);
@@ -82,7 +82,6 @@ public class ReportServiceImpl implements ReportService {
 
         File file = new File(String.format("%s/AvailableUsers-%s.xlsx",
                 reportsPath, LocalDate.now()));
-        log.error("Failed to write a monthly report");
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             workbook.write(outputStream);
         } catch (IOException e) {
@@ -94,8 +93,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public XSSFWorkbook exportOccupationReport() {
-        createTableHeaders(FIRST_NAME_COL, LAST_NAME_COL, DEPARTMENT_COL, DURATION_COL,
-                OCCUPATION_COL);
+        createTableHeaders(FIRST_NAME_COL, LAST_NAME_COL, DEPARTMENT_COL, OCCUPATION_COL, DURATION_COL);
         List<ProjectPosition> projectPositions = projectPositionRepository.findAll();
         for (int i = 0; i < projectPositions.size(); i++) {
             ProjectPosition projectPosition = projectPositions.get(i);
@@ -114,12 +112,12 @@ public class ReportServiceImpl implements ReportService {
             Department department = user.getDepartment();
             departmentName.setCellValue(department == null ? null : department.getTitle());
 
-            Cell duration = row.createCell(3);
-            duration.setCellValue(String.format("%s - (%s - %s)", project.getTitle(),
-                    projectPosition.getPositionStartDate(), projectPosition.getPositionEndDate()));
-
-            Cell occupation = row.createCell(4);
+            Cell occupation = row.createCell(3);
             occupation.setCellValue(String.format("%s", projectPosition.getOccupation()));
+
+            Cell duration = row.createCell(4);
+            duration.setCellValue(String.format("%s, (%s - %s)", project.getTitle(),
+                    projectPosition.getPositionStartDate(), projectPosition.getPositionEndDate()));
         }
         log.info("Occupation report created successfully");
         return workbook;

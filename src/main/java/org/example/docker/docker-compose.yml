@@ -1,0 +1,24 @@
+#services:
+#
+#  my-web-app-web:
+#    build: app
+#    container_name: application
+#    ports:
+#      - "8088:8088"
+#    links:
+#      - app-db
+#
+#  app-db:
+#    build: db
+#    container_name: db
+#    expose:
+#    volumes_from:
+#      - my-web-app-db
+#
+#  my-web-app-db:
+#    image: cogniteev/echo
+#    environment:
+#      - POSTGRESS_PASSWORD=postgres
+#    command: echo 'Data Container for PostgreSQL'
+#    volumes:
+#      - /var/lib/postgresql/data

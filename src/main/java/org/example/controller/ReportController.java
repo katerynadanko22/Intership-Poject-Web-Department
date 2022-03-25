@@ -1,7 +1,6 @@
 package org.example.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -20,7 +19,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/users/reports")
 @Api(tags = "API for exporting workload reports of users")
@@ -40,6 +38,7 @@ public class ReportController {
         log.info("executing exportUsers() method");
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Users.xlsx");
+        response.setCharacterEncoding("utf-8");
         XSSFWorkbook workbook = reportService.exportOccupationReport();
         writeToResponse(workbook, response);
     }
