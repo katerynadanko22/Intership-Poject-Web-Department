@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -80,14 +81,16 @@ public class ReportServiceImpl implements ReportService {
             department.setCellValue(user.getDepartment().getTitle());
         }
 
-        File file = new File(String.format("%s/AvailableUsers-%s.xlsx",
-                reportsPath, LocalDate.now()));
+//        for (int i = 0; i < 10; i++) {
+                      File file = new File(String.format("%s/AvailableUsers-%s.xlsx",
+                    reportsPath, LocalDate.now()));
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             workbook.write(outputStream);
         } catch (IOException e) {
             throw new WritingReportException("Failed to write down a monthly report", e);
         }
         log.info("Monthly report generated successfully");
+//    }
     }
 
     @Override
