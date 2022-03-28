@@ -1,0 +1,15 @@
+services:
+
+  my-web-app:
+    build: .
+    container_name: application
+    ports:
+      - "8088:8088"
+    links:
+      - my-app-db
+
+  my-app-db:
+    build: ./db
+    container_name: db
+    expose:
+      - "5432"
