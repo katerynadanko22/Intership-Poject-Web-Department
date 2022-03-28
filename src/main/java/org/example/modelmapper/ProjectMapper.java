@@ -14,11 +14,9 @@ public class ProjectMapper {
 
     private final ModelMapper mapper;
 
-
     public Project toEntity(ProjectDTO dto) {
         return Objects.isNull(dto) ? null : mapper.map(dto, Project.class);
     }
-
 
     public ProjectDTO toDto(Project entity) {
         return Objects.isNull(entity) ? null : mapper.map(entity, ProjectDTO.class);

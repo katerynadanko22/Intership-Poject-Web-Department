@@ -78,6 +78,8 @@
             </column>
             <column name="position_end_date" type="date">
             </column>
+            <column name="occupation" type="varchar">
+            </column>
             <column name="user_id" type="int">
                 <constraints foreignKeyName="fk_project_position_user" references="users(id)"/>
             </column>

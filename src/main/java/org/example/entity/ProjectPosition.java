@@ -36,6 +36,9 @@ public class ProjectPosition {
     @Column(name = "position_end_date")
     private LocalDate positionEndDate;
 
+    @Column(name = "occupation")
+    private String occupation;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;

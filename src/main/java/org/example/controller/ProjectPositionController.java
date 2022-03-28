@@ -33,11 +33,6 @@ import java.util.List;
 @RequestMapping("api/project-positions")
 public class ProjectPositionController {
     private final ProjectPositionFacade projectPositionFacade;
-    private final ProjectPositionRepository projectPositionRepository;
-    private final ProjectFacade projectFacade;
-    private final ProjectRepository projectRepository;
-    private final UserFacade userFacade;
-    private final UserRepository userRepository;
 
     @ApiOperation(value = "Save new ProjectPosition in the System ", response = ProjectPositionDTO.class, tags = "saveProjectPosition")
     @PreAuthorize("hasAnyAuthority('read','write')")

@@ -21,6 +21,8 @@ public class ProjectPositionDTO {
     @ApiModelProperty(notes = "End date of the ProjectPosition", name = "End", required = true, value = "26-02-2022")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate positionEndDate;
+    @ApiModelProperty(notes = "occupation of the ProjectPosition", name = "occupation", required = true, value = "write code")
+    private String occupation;
     @ApiModelProperty(notes = "Id of the User", name = "User", required = true, value = "User")
     private UserDTO user;
     @ApiModelProperty(notes = "Id of the Project", name = "Project", required = true, value = "Project")
