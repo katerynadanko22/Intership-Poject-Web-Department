@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>Intership-Poject-Web-Department</artifactId>
+    <artifactId>Internship</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>Intership-Poject-Web-Department Maven Webapp</name>
+    <name>Internship Maven Webapp</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
@@ -349,7 +349,7 @@
         </repository>
     </repositories>
     <build>
-        <finalName>Intership-Poject-Web-Department</finalName>
+        <finalName>Internship</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
