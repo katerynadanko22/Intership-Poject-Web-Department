@@ -74,5 +74,4 @@ public class UserFacade {
     public void deleteById(Integer id) {
         userService.deleteById(id);
     }
-
 }

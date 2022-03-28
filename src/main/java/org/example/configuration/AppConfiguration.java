@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -16,6 +17,7 @@ import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 @ComponentScan(value = {"org.example"})
 @EnableWebMvc
 @EnableJpaRepositories("org.example.repository")
+@EnableScheduling
 public class AppConfiguration {
     @Bean
     public static PropertySourcesPlaceholderConfigurer cong() {
