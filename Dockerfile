@@ -4,3 +4,4 @@ RUN echo "export JAVA_OPTS=\"-Dapp.env=Internship\"" > /usr/local/tomcat/bin/set
 COPY target/Internship.war /usr/local/tomcat/webapps/Internship.war
 
 CMD ["catalina.sh", "run"]
+

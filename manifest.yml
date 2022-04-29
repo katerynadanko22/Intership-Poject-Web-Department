@@ -1,0 +1,8 @@
+﻿applications:
+  - name: internship2
+    random-route: false
+    path: target\Internship.war
+    buildpacks:
+      - java_buildpack
+    services:
+      - postgres-db

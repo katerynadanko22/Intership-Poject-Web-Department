@@ -35,7 +35,7 @@ public class EntityExceptionController {
 
     @ExceptionHandler(DuplicateEntityException.class)
     public ResponseEntity<String> handleDuplicateUserException(DuplicateEntityException e) {
-        return new ResponseEntity<String>("User already exist!", HttpStatus.CONFLICT);
+        return new ResponseEntity<String>(e.toString(), HttpStatus.CONFLICT);
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDuplicateUserException(DataIntegrityViolationException e) {

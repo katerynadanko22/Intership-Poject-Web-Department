@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-@Api(value = "Swagger2DemoRestController", description = "REST Apis related to User Entity")
+@Api(value = "Swagger2DemoRestController", tags = {"REST Apis related to User Entity"})
 @RequiredArgsConstructor
 @Slf4j
 @RestController

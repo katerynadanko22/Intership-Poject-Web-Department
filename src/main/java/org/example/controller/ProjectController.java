@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(value = "Swagger2DemoRestController", description = "REST Apis related to Project Entity")
+@Api(value = "Swagger2DemoRestController", tags = {"REST Apis related to Project Entity"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/projects")

@@ -22,7 +22,7 @@ public class LiquiBaseConfig {
     @Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setChangeLog("classpath:changelog.xml");
+        liquibase.setChangeLog("classpath:migrations.xml");
         liquibase.setDataSource(hibernateConfig.getDataSource());
         return liquibase;
     }
