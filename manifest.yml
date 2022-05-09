@@ -6,3 +6,8 @@
       - java_buildpack
     services:
       - postgres-db
+    env:
+      SPRING_PROFILES_ACTIVE: test
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: "11.+" } }'
+      JBP_CONFIG_TOMCAT: '{ tomcat: { version: 9.0.+ } }'
+      JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{ enabled: false }'

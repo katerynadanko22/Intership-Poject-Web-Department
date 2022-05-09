@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet  author="Kate"  id="dropTable-1">
+        <dropTable  cascadeConstraints="true"
+                    tableName="databasechangeloglock"/>
+    </changeSet>
+    <changeSet  author="Kate"  id="dropTable-2">
+        <dropTable  cascadeConstraints="true"
+                    tableName="databasechangelog"/>
+    </changeSet>
+    <changeSet  author="Kate"  id="dropTable-3">
+        <dropTable  cascadeConstraints="true"
+                    tableName="departments"/>
+    </changeSet>
+    <changeSet  author="Kate"  id="dropTable-4">
+        <dropTable  cascadeConstraints="true"
+                    tableName="projects"/>
+    </changeSet>
+    <changeSet  author="Kate"  id="dropTable-5">
+        <dropTable  cascadeConstraints="true"
+                    tableName="users"/>
+    </changeSet>
+    <changeSet  author="Kate"  id="dropTable-6">
+        <dropTable  cascadeConstraints="true"
+                    tableName="project_positions"/>
+    </changeSet>
+</databaseChangeLog>
