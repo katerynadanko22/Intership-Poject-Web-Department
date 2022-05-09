@@ -8,8 +8,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -26,10 +29,12 @@ import java.util.Properties;
 @EnableTransactionManagement
 @PropertySource(value = {"classpath:application.properties"})
 @ComponentScan(value = {"org.example"})
-public class HibernateConfig {
+public class HibernateConfig
+{
 
     @Autowired
-    public HibernateConfig(Environment env) {
+    public HibernateConfig (Environment env)
+    {
         this.env = env;
     }
 
@@ -44,10 +49,12 @@ public class HibernateConfig {
     public static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
     public static final String HIBERNATE_BATCH_SIZE = "hibernate.batch.size";
     public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
-    public static final String HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS = "hibernate.current.session.context.class";
+    public static final String HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS =
+        "hibernate.current.session.context.class";
 
     @Bean
-    public DataSource getDataSource() {
+    public DataSource getDataSource ()
+    {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getRequiredProperty(DATASOURCE_DRIVER));
         dataSource.setUrl(env.getRequiredProperty(DATASOURCE_URL));
@@ -57,7 +64,8 @@ public class HibernateConfig {
     }
 
     @Bean
-    public LocalSessionFactoryBean getSessionFactory() {
+    public LocalSessionFactoryBean getSessionFactory ()
+    {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(getDataSource());
         sessionFactory.setPackagesToScan(ENTITY_BASE_PACKAGE);
@@ -65,32 +73,39 @@ public class HibernateConfig {
         return sessionFactory;
     }
 
-    private Properties getHibernateProperties() {
+    private Properties getHibernateProperties ()
+    {
         Properties properties = new Properties();
         properties.put(AvailableSettings.DIALECT, env.getRequiredProperty(HIBERNATE_DIALECT));
         properties.put(AvailableSettings.SHOW_SQL, env.getRequiredProperty(HIBERNATE_SHOW_SQL));
-        properties.put(AvailableSettings.STATEMENT_BATCH_SIZE, env.getRequiredProperty(HIBERNATE_BATCH_SIZE));
-        properties.put(AvailableSettings.HBM2DDL_AUTO, env.getRequiredProperty(HIBERNATE_HBM2DDL_AUTO));
-        properties.put(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS, env.getRequiredProperty(HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS));
+        properties.put(AvailableSettings.STATEMENT_BATCH_SIZE,
+            env.getRequiredProperty(HIBERNATE_BATCH_SIZE));
+        properties.put(AvailableSettings.HBM2DDL_AUTO,
+            env.getRequiredProperty(HIBERNATE_HBM2DDL_AUTO));
+        properties.put(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS,
+            env.getRequiredProperty(HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS));
         return properties;
     }
 
     @Bean(name = "transactionManager")
-    public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
+    public HibernateTransactionManager transactionManager (SessionFactory sessionFactory)
+    {
         HibernateTransactionManager txManager = new HibernateTransactionManager();
         txManager.setSessionFactory(sessionFactory);
         return txManager;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    public PlatformTransactionManager transactionManager ()
+    {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory ()
+    {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(getDataSource());
         em.setPackagesToScan(ENTITY_BASE_PACKAGE);
@@ -101,8 +116,19 @@ public class HibernateConfig {
     }
 
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation ()
+    {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
+//    @Bean
+//    public DataSourceInitializer dataSourceInitializer ()
+//    {
+//        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+//        resourceDatabasePopulator.addScript(new ClassPathResource("/db/drop.sql"));
+//        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+//        dataSourceInitializer.setDataSource(getDataSource());
+//        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+//        return dataSourceInitializer;
+//    }
 }
