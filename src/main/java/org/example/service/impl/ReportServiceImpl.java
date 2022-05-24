@@ -1,8 +1,11 @@
 package org.example.service.impl;
 
-import org.example.service.ReportService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.entity.Department;
 import org.example.entity.Project;
@@ -11,12 +14,10 @@ import org.example.entity.User;
 import org.example.exception.ReadingReportException;
 import org.example.exception.WritingReportException;
 import org.example.repository.ProjectPositionRepository;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.example.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,7 +35,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class ReportServiceImpl implements ReportService {
+@EnableScheduling
+public class ReportServiceImpl implements ReportService
+{
     private final static String FIRST_NAME_COL = "First Name";
     private final static String LAST_NAME_COL = "Last Name";
     private final static String DEPARTMENT_COL = "Department";
@@ -49,7 +51,8 @@ public class ReportServiceImpl implements ReportService {
     private final ProjectPositionRepository projectPositionRepository;
 
     @Autowired
-    public ReportServiceImpl(ProjectPositionRepository projectPositionRepository) {
+    public ReportServiceImpl (ProjectPositionRepository projectPositionRepository)
+    {
         this.workbook = new XSSFWorkbook();
         this.sheet = (workbook.createSheet("Users info"));
         this.projectPositionRepository = projectPositionRepository;
@@ -58,16 +61,29 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Scheduled(cron = "${reports-generating-cron}")
     @Transactional
-    public void generateAvailableUsersReport() {
+    public void generateAvailableUsersReport ()
+    {
         log.info("start to create Table Headers");
-        createTableHeaders(FIRST_NAME_COL, LAST_NAME_COL, DEPARTMENT_COL);
-        List<User> availableUsers = projectPositionRepository
-                .findAllAvailableProjectPositionsNextDays(30)
-                .stream()
-                .map(ProjectPosition::getUser)
-                .collect(Collectors.toList());
-        for (int i = 0; i < availableUsers.size(); i++) {
-            User user = availableUsers.get(i);
+        createTableHeaders(FIRST_NAME_COL, LAST_NAME_COL, DEPARTMENT_COL, OCCUPATION_COL,
+            DURATION_COL);
+
+        //        List<User> availableUsers = projectPositionRepository
+        //                .findAllAvailableProjectPositionsNextDays(30)
+        //                .stream()
+        //                .map(ProjectPosition::getUser)
+        //                .collect(Collectors.toList());
+        //        for (int i = 0; i < availableUsers.size(); i++) {
+        //            User user = availableUsers.get(i);
+
+
+        List<ProjectPosition> availableProjectPositions = projectPositionRepository
+            .findAllAvailableProjectPositionsNextDays(30)
+            .stream()
+            .collect(Collectors.toList());
+        for (int i = 0; i < availableProjectPositions.size(); i++) {
+            ProjectPosition projectPosition = availableProjectPositions.get(i);
+            User user = projectPosition.getUser();
+            Project project = projectPosition.getProject();
 
             Row row = sheet.createRow(i + 1);
 
@@ -79,24 +95,34 @@ public class ReportServiceImpl implements ReportService {
 
             Cell department = row.createCell(2);
             department.setCellValue(user.getDepartment().getTitle());
+
+            Cell occupation = row.createCell(3);
+            occupation.setCellValue(projectPosition.getOccupation());
+
+            Cell duration = row.createCell(4);
+            duration.setCellValue(String.format("%s, (%s - %s)", project.getTitle(),
+                projectPosition.getPositionStartDate(), projectPosition.getPositionEndDate()));
         }
 
-//        for (int i = 0; i < 10; i++) {
-                      File file = new File(String.format("%s/AvailableUsers-%s.xlsx",
-                    reportsPath, LocalDate.now()));
-        try (FileOutputStream outputStream = new FileOutputStream(file)) {
-            workbook.write(outputStream);
-        } catch (IOException e) {
-            throw new WritingReportException("Failed to write down a monthly report", e);
+        for (int i = 0; i < 10; i++) {
+            File file = new File(String.format("%s/AvailableUsers-%s-%s.xlsx",
+                reportsPath, LocalDate.now(), i));
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                workbook.write(outputStream);
+            }
+            catch (IOException e) {
+                throw new WritingReportException("Failed to write down a monthly report", e);
+            }
+            log.info("Monthly report generated successfully");
         }
-        log.info("Monthly report generated successfully");
-//    }
     }
 
     @Override
     @Transactional
-    public XSSFWorkbook exportOccupationReport() {
-        createTableHeaders(FIRST_NAME_COL, LAST_NAME_COL, DEPARTMENT_COL, OCCUPATION_COL, DURATION_COL);
+    public XSSFWorkbook exportOccupationReport ()
+    {
+        createTableHeaders(FIRST_NAME_COL, LAST_NAME_COL, DEPARTMENT_COL, OCCUPATION_COL,
+            DURATION_COL);
         List<ProjectPosition> projectPositions = projectPositionRepository.findAll();
         for (int i = 0; i < projectPositions.size(); i++) {
             ProjectPosition projectPosition = projectPositions.get(i);
@@ -120,42 +146,47 @@ public class ReportServiceImpl implements ReportService {
 
             Cell duration = row.createCell(4);
             duration.setCellValue(String.format("%s, (%s - %s)", project.getTitle(),
-                    projectPosition.getPositionStartDate(), projectPosition.getPositionEndDate()));
+                projectPosition.getPositionStartDate(), projectPosition.getPositionEndDate()));
         }
         log.info("Occupation report created successfully");
         return workbook;
     }
 
     @Override
-    public XSSFWorkbook exportLastGeneratedReport() {
+    public XSSFWorkbook exportLastGeneratedReport ()
+    {
         File latestReport = getLatestReport();
         log.info("Latest report retrieved successfully");
         try {
             return new XSSFWorkbook(OPCPackage.open(latestReport));
-        } catch (IOException | InvalidFormatException e) {
+        }
+        catch (IOException | InvalidFormatException e) {
             throw new WritingReportException("Failed to write report", e);
         }
     }
 
-    private File getLatestReport() {
+    private File getLatestReport ()
+    {
         File[] reports = new File(reportsPath).listFiles();
         return Arrays.stream(reports)
-                .sorted((f1, f2) -> {
-                    BasicFileAttributes attr1 = null;
-                    BasicFileAttributes attr2 = null;
-                    try {
-                        attr1 = Files.readAttributes(f1.toPath(), BasicFileAttributes.class);
-                        attr2 = Files.readAttributes(f2.toPath(), BasicFileAttributes.class);
-                    } catch (IOException e) {
-                        throw new ReadingReportException("Failed to read file attributes", e);
-                    }
-                    return (-1) * attr1.creationTime().compareTo(attr2.creationTime());
-                })
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("No reports found"));
+            .sorted((f1, f2) -> {
+                BasicFileAttributes attr1 = null;
+                BasicFileAttributes attr2 = null;
+                try {
+                    attr1 = Files.readAttributes(f1.toPath(), BasicFileAttributes.class);
+                    attr2 = Files.readAttributes(f2.toPath(), BasicFileAttributes.class);
+                }
+                catch (IOException e) {
+                    throw new ReadingReportException("Failed to read file attributes", e);
+                }
+                return (-1) * attr1.creationTime().compareTo(attr2.creationTime());
+            })
+            .findFirst()
+            .orElseThrow(() -> new NoSuchElementException("No reports found"));
     }
 
-    private void createTableHeaders(String ... names) {
+    private void createTableHeaders (String... names)
+    {
         Row row = sheet.createRow(0);
         for (int i = 0; i < names.length; i++) {
             sheet.setColumnWidth(i, 12000);
